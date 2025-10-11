@@ -1,7 +1,7 @@
 {
   "name": "divergent-flow-ui",
   "private": true,
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,7 @@
     "release": "standard-version && npm run update-ui-version",
     "release:minor": "standard-version --release-as minor && npm run update-ui-version",
     "release:major": "standard-version --release-as major && npm run update-ui-version",
-    "update-ui-version": "node scripts/update-ui-version.js"
+    "update-ui-version": "node scripts/update-ui-version.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
