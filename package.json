@@ -8,9 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:major": "standard-version --release-as major"
+  "release": "standard-version && npm run update-ui-version",
+  "release:minor": "standard-version --release-as minor && npm run update-ui-version",
+  "release:major": "standard-version --release-as major && npm run update-ui-version",
+  "update-ui-version": "node scripts/update-ui-version.js"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
