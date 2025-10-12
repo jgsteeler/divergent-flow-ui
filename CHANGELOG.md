@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.4...v0.1.5) (2025-10-12)
+
+
+### Features
+
+* update package.json scripts and dependencies, add Docker support ([9021849](https://github.com/jgsteeler/divergent-flow-ui/commit/90218490d6810ab39171eb5fe2115ff09ea3ac00))
+
 ### [0.1.4](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.3...v0.1.4) (2025-10-11)
 
 ### [0.1.3](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.2...v0.1.3) (2025-10-11)
