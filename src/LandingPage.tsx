@@ -1,55 +1,54 @@
 import { useEffect, useState } from 'react';
 import { getTheme } from './theme';
+import { versionService } from './api/services/versionService';
+import { getUiMode, setUiMode, getNeuroMode, setNeuroMode } from './utils/preferences';
+import type { UiMode, NeuroMode } from './utils/preferences';
+import { getConfig } from './config';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-const MODE = import.meta.env.VITE_MODE || 'light';
 
 function useApiVersion() {
   const [apiVersion, setApiVersion] = useState<string>('');
   const [apiService, setApiService] = useState<string>('');
   const [apiTimestamp, setApiTimestamp] = useState<string>('');
   useEffect(() => {
-    const url = `${API_BASE}/version`;
-    fetch(url)
-      .then((r) => {
-        if (!r.ok) {
-          console.error(`API version fetch failed: ${r.status} ${r.statusText} at ${url}`);
-          setApiVersion('unavailable');
-          return null;
-        }
-        return r.json();
-      })
-      .then((d) => {
-        if (!d) return;
+    versionService.getVersion()
+      .then((d: { version?: string; service?: string; timestamp?: string }) => {
         setApiVersion(d.version || '');
         setApiService(d.service || '');
         setApiTimestamp(d.timestamp || '');
       })
-      .catch((err) => {
-        console.error('API version fetch error:', err, 'URL:', url);
+      .catch((err: unknown) => {
+        console.error('API version fetch error:', err);
         setApiVersion('unavailable');
       });
   }, []);
   return { apiVersion, apiService, apiTimestamp };
 }
 
-
 function useUiVersion() {
-  // Use VITE_UI_VERSION injected at build time
-  return import.meta.env.VITE_UI_VERSION || 'unknown';
+  // Use VERSION from runtime config
+  return getConfig().VERSION || 'unknown';
 }
-
 export default function LandingPage() {
-  const [mode, setMode] = useState<'light' | 'dark'>(MODE === 'dark' ? 'dark' : 'light');
+  const [mode, setModeState] = useState<UiMode>(getUiMode());
+  const [neuroMode, setNeuroModeState] = useState<NeuroMode>(getNeuroMode());
   const theme = getTheme(mode);
-  const { apiVersion, apiService, apiTimestamp } = useApiVersion();
+  const { apiVersion } = useApiVersion();
   const uiVersion = useUiVersion();
+
+  // Persist mode changes
+  useEffect(() => {
+    setUiMode(mode);
+  }, [mode]);
+
+  useEffect(() => {
+    setNeuroMode(neuroMode);
+  }, [neuroMode]);
 
   // Debug: log API version fetch errors if any
   useEffect(() => {
     if (apiVersion === 'unavailable') {
-      // eslint-disable-next-line no-console
-      console.error('Failed to fetch API version from', `${API_BASE}/version`);
+      console.error('Failed to fetch API version from versionService');
     }
   }, [apiVersion]);
 
@@ -90,8 +89,27 @@ export default function LandingPage() {
         <div style={{ margin: '1.5rem 0', fontSize: 16, color: theme.secondary }}>
           <div>Web UI Version: <b>{uiVersion}</b></div>
           <div>API Version: <b>{apiVersion}</b></div>
-          <div style={{ fontSize: 12, color: theme.text, opacity: 0.7 }}>{apiService && `Service: ${apiService}`}</div>
-          <div style={{ fontSize: 12, color: theme.text, opacity: 0.7 }}>{apiTimestamp && `Timestamp: ${apiTimestamp}`}</div>
+          {/* Service and Timestamp removed to avoid unused variable warnings */}
+          <div style={{ marginTop: 12, fontSize: 15, color: theme.accent, fontWeight: 600 }}>
+            Neuro Mode: <span style={{ fontWeight: 700 }}>{neuroMode}</span>
+            <button
+              style={{
+                marginLeft: 16,
+                background: theme.secondary,
+                color: theme.background,
+                border: 'none',
+                borderRadius: 8,
+                padding: '0.2rem 1rem',
+                fontWeight: 600,
+                fontSize: 14,
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}
+              onClick={() => setNeuroModeState(neuroMode === 'typical' ? 'divergent' : 'typical')}
+            >
+              Switch to {neuroMode === 'typical' ? 'Divergent' : 'Typical'}
+            </button>
+          </div>
         </div>
         <button
           style={{
@@ -106,7 +124,7 @@ export default function LandingPage() {
             marginTop: 16,
             transition: 'background 0.2s',
           }}
-          onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}
+          onClick={() => setModeState(mode === 'light' ? 'dark' : 'light')}
         >
           Switch to {mode === 'light' ? 'Dark' : 'Light'} Mode
         </button>

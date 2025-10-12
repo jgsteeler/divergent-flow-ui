@@ -1,10 +1,36 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App';
+import type { IAppConfig } from './config';
+
+// Fetch runtime config before rendering the app
+const fetchConfig = async (): Promise<IAppConfig> => {
+  try {
+    const response = await fetch('/config/config.json');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Could not fetch runtime configuration. Falling back to defaults.', error);
+    return {
+      API_BASE_URL: 'http://localhost:3000/api',
+      NEURO_MODE: 'typical',
+      VERSION: '0.0.0',
+    };
+  }
+};
+
+const initApp = async () => {
+  const config = await fetchConfig();
+  window.appConfig = config;
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+};
+
+initApp();

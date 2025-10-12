@@ -1,0 +1,22 @@
+services:
+  ui:
+    container_name: div-flo-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: divergent-flow-ui:prod
+    ports:
+      - "4137:80"
+    env_file:
+      - .env
+
+  ui-dev:
+    container_name: div-flo-ui-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: divergent-flow-ui:dev
+    ports:
+      - "5137:80"
+    env_file:
+      - .env.dev
