@@ -19,8 +19,9 @@ const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
 // Compose config
 const config = {
-  API_BASE_URL: env.API_BASE_URL || 'http://localhost:8080',
-  NEURO_MODE: env.NEURO_MODE || 'typical',
+  API_BASE_URL: 'http://localhost:8081',
+  NEURO_MODE: 'typical',
+  ENVIRONMENT: 'development',
   VERSION: pkg.version || '0.0.0',
 };
 

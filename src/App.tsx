@@ -1,10 +1,13 @@
 import LandingPage from './LandingPage';
-import { ModeProvider } from './context/ModeContext.tsx';
+import NonProdBanner from './NonProdBanner';
 
 export default function App() {
   return (
-    <ModeProvider>
-      <LandingPage />
-    </ModeProvider>
+    <>
+      <NonProdBanner />
+      <div style={{ paddingTop: 40 }}>
+        <LandingPage />
+      </div>
+    </>
   );
 }

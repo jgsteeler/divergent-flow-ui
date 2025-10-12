@@ -4,6 +4,7 @@ export interface IAppConfig {
   API_BASE_URL: string;
   NEURO_MODE: 'typical' | 'divergent';
   VERSION: string;
+  ENVIRONMENT?: string;
 }
 
 // Global variable to hold the config (populated by the main script)
@@ -21,7 +22,8 @@ export const getConfig = (): IAppConfig => {
     return { 
       API_BASE_URL: 'http://localhost:3000/api', 
       NEURO_MODE: 'typical',
-      VERSION: '0.0.0' // fallback version
+      VERSION: '0.0.0',
+      ENVIRONMENT: 'development', // fallback env
     };
   }
   return window.appConfig;
