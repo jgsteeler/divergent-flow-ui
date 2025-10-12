@@ -11,10 +11,13 @@
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major",
-    "docker:up": "docker compose up -d --build",
-    "docker:down": "docker compose stop && docker compose rm -f",
-    "docker:logs:prod": "docker compose logs -f ui",
-    "docker:logs:dev": "docker compose logs -f ui-dev"
+  "docker:up": "docker compose up -d --build",
+  "docker:up:prod": "docker compose -f docker-compose.yml up -d --build",
+  "docker:up:dev": "docker compose -f docker-compose.dev.yml up -d --build",
+  "docker:down": "docker compose down",
+  "docker:build": "docker compose build --no-cache",
+  "docker:logs:prod": "docker compose logs -f ui",
+  "docker:logs:dev": "docker compose logs -f ui-dev"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
