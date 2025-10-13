@@ -4,6 +4,6 @@ import type { VersionResponse } from '../schemas/versionSchema';
 
 export const versionService = {
   getVersion: async (): Promise<VersionResponse> => {
-    return apiClient('/version', VersionSchema, { method: 'GET' });
+    return apiClient('/v1/version', VersionSchema, { method: 'GET' });
   },
 };

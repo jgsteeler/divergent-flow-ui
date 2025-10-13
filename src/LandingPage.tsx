@@ -36,6 +36,11 @@ export default function LandingPage() {
   const { apiVersion } = useApiVersion();
   const uiVersion = useUiVersion();
 
+  // Set body background to match theme
+  useEffect(() => {
+    document.body.style.background = theme.background;
+  }, [theme.background]);
+
   // Persist mode changes
   useEffect(() => {
     setUiMode(mode);
@@ -57,13 +62,14 @@ export default function LandingPage() {
       style={{
         minHeight: '100vh',
         width: '100vw',
+        overflowX: 'hidden',
         background: theme.background,
         color: theme.text,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2vw',
+        padding: 'max(2vw, 16px)',
         boxSizing: 'border-box',
         transition: 'background 0.3s, color 0.3s',
       }}

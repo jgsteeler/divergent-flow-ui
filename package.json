@@ -4,7 +4,7 @@
   "version": "0.1.5",
   "type": "module",
   "scripts": {
-    "dev": "serve -s dist -l 4137",
+    "dev": "serve -s dist -l 6137",
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/generate-config.mjs",
     "lint": "eslint .",

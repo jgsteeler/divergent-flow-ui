@@ -1,10 +1,17 @@
+
 import LandingPage from './LandingPage';
-import { ModeProvider } from './context/ModeContext.tsx';
+import NonProdBanner from './NonProdBanner';
+import { getConfig } from './config';
 
 export default function App() {
+  const { ENVIRONMENT } = getConfig();
+  const showBanner = ENVIRONMENT && !['production', 'localprod'].includes(ENVIRONMENT.toLowerCase());
   return (
-    <ModeProvider>
-      <LandingPage />
-    </ModeProvider>
+    <>
+      {showBanner && <NonProdBanner />}
+      <div>
+        <LandingPage />
+      </div>
+    </>
   );
 }
