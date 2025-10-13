@@ -1,11 +1,15 @@
+
 import LandingPage from './LandingPage';
 import NonProdBanner from './NonProdBanner';
+import { getConfig } from './config';
 
 export default function App() {
+  const { ENVIRONMENT } = getConfig();
+  const showBanner = ENVIRONMENT && !['production', 'localprod'].includes(ENVIRONMENT.toLowerCase());
   return (
     <>
-      <NonProdBanner />
-      <div style={{ paddingTop: 40 }}>
+      {showBanner && <NonProdBanner />}
+      <div>
         <LandingPage />
       </div>
     </>

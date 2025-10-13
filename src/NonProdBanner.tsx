@@ -1,10 +1,8 @@
+
 import { getConfig } from './config';
 
 export default function NonProdBanner() {
   const { ENVIRONMENT, VERSION } = getConfig();
-  if (!ENVIRONMENT || ['production', 'localprod'].includes(ENVIRONMENT.toLowerCase())) {
-    return null;
-  }
   return (
     <div
       style={{
@@ -23,7 +21,7 @@ export default function NonProdBanner() {
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
       }}
     >
-      {ENVIRONMENT.toUpperCase()} ENVIRONMENT &mdash; UI Version: {VERSION}
+      {ENVIRONMENT?.toUpperCase()} ENVIRONMENT &mdash; UI Version: {VERSION}
     </div>
   );
 }
