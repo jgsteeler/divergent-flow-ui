@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.6...v0.1.7) (2025-10-28)
+
+
+### Features
+
+* add capture functionality and navigation for both divergent and typical modes ([1d7cf88](https://github.com/jgsteeler/divergent-flow-ui/commit/1d7cf88c33dbfb5af02d500446fa345dfdc9a103)), closes [#d4](https://github.com/jgsteeler/divergent-flow-ui/issues/d4) [#1b2e1](https://github.com/jgsteeler/divergent-flow-ui/issues/1b2e1)
+* add comprehensive WARP documentation for project setup, development, and deployment ([532b426](https://github.com/jgsteeler/divergent-flow-ui/commit/532b426509f5911e44a3b17ebdeb4995593cea4b))
+
 ### [0.1.6](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.5...v0.1.6) (2025-10-13)
 
 
