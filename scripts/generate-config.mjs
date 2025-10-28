@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 
-const envPath = path.resolve(process.cwd(), '.env');
+const envPath = path.resolve(process.cwd(), '.env.dev');
 const pkgPath = path.resolve(process.cwd(), 'package.json');
 const distConfigDir = path.resolve(process.cwd(), 'dist/config');
 const distConfigFile = path.join(distConfigDir, 'config.json');
@@ -19,10 +19,11 @@ const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
 // Compose config
 const config = {
-  API_BASE_URL: 'http://localhost:8081',
-  NEURO_MODE: 'typical',
-  ENVIRONMENT: 'development',
+  API_BASE_URL: env.API_BASE_URL || 'http://localhost:8081',
+  NEURO_MODE: env.NEURO_MODE || 'typical',
+  ENVIRONMENT: env.ENVIRONMENT || 'development',
   VERSION: pkg.version || '0.0.0',
+  USER_ID: env.USER_ID || '00000000-0000-0000-0000-000000000001',
 };
 
 // Ensure dist/config exists

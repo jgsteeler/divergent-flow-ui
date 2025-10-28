@@ -1,4 +1,5 @@
 // src/theme.ts
+import { getConfig } from './config';
 
 export const GSC_LIGHT = {
   primary: '#004687', // deep blue
@@ -16,8 +17,26 @@ export const GSC_DARK = {
   text: '#F7FAFC',
 };
 
+// Non-prod environment backgrounds (light pea green tint)
+const GSC_LIGHT_NONPROD = {
+  ...GSC_LIGHT,
+  background: '#d4edda', // stronger light pea green
+};
+
+const GSC_DARK_NONPROD = {
+  ...GSC_DARK,
+  background: '#1b2e1f', // dark pea green
+};
+
 export type Theme = typeof GSC_LIGHT;
 
 export function getTheme(mode: 'light' | 'dark'): Theme {
+  const { ENVIRONMENT } = getConfig();
+  const isNonProd = ENVIRONMENT && !['production', 'localprod'].includes(ENVIRONMENT.toLowerCase());
+  
+  if (isNonProd) {
+    return mode === 'dark' ? GSC_DARK_NONPROD : GSC_LIGHT_NONPROD;
+  }
+  
   return mode === 'dark' ? GSC_DARK : GSC_LIGHT;
 }

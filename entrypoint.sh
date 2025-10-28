@@ -22,7 +22,8 @@ cat > "$CONFIG_FILE_PATH" <<EOF
   "API_BASE_URL": "${API_BASE_URL:-http://localhost:3000/api}",
   "NEURO_MODE": "${NEURO_MODE:-typical}",
   "VERSION": "${VERSION_VALUE}",
-  "ENVIRONMENT": "${ENVIRONMENT:-development}"
+  "ENVIRONMENT": "${ENVIRONMENT:-development}",
+  "USER_ID": "${USER_ID:-00000000-0000-0000-0000-000000000001}"
 }
 EOF
 
