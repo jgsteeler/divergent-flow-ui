@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.7...v0.1.8) (2025-10-29)
+
+
+### Features
+
+* add comprehensive test suite and capture functionality ([1fb11f9](https://github.com/jgsteeler/divergent-flow-ui/commit/1fb11f99cd37c9b350ddd2eaa61c8e0a9acaf831))
+
 ### [0.1.7](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.6...v0.1.7) (2025-10-28)
 
 
