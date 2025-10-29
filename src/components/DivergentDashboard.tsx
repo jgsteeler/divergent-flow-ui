@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
+import { userService } from '../api/services/userService';
 import { getConfig } from '../config';
 import type { Theme } from '../theme';
 import type { UiMode, NeuroMode } from '../utils/preferences';
@@ -41,7 +42,8 @@ export default function DivergentDashboard({
     setFeedback(null);
 
     try {
-      const userId = getConfig().USER_ID || '00000000-0000-0000-0000-000000000001';
+      const email = getConfig().USER_EMAIL || 'default@example.com';
+      const userId = await userService.getUserIdByEmail(email);
       await captureService.createCapture({
         userId,
         rawText: captureText.trim(),

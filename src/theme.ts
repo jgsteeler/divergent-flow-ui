@@ -30,6 +30,10 @@ const GSC_DARK_NONPROD = {
 
 export type Theme = typeof GSC_LIGHT;
 
+// Export default themes for testing
+export const lightTheme = GSC_LIGHT;
+export const darkTheme = GSC_DARK;
+
 export function getTheme(mode: 'light' | 'dark'): Theme {
   const { ENVIRONMENT } = getConfig();
   const isNonProd = ENVIRONMENT && !['production', 'localprod'].includes(ENVIRONMENT.toLowerCase());

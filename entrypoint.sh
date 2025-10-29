@@ -23,7 +23,7 @@ cat > "$CONFIG_FILE_PATH" <<EOF
   "NEURO_MODE": "${NEURO_MODE:-typical}",
   "VERSION": "${VERSION_VALUE}",
   "ENVIRONMENT": "${ENVIRONMENT:-development}",
-  "USER_ID": "${USER_ID:-00000000-0000-0000-0000-000000000001}"
+  "USER_EMAIL": "${USER_EMAIL:-default@example.com}"
 }
 EOF
 

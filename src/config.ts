@@ -5,7 +5,7 @@ export interface IAppConfig {
   NEURO_MODE: 'typical' | 'divergent';
   VERSION: string;
   ENVIRONMENT?: string;
-  USER_ID?: string;
+  USER_EMAIL?: string;
 }
 
 // Global variable to hold the config (populated by the main script)
@@ -25,7 +25,7 @@ export const getConfig = (): IAppConfig => {
       NEURO_MODE: 'typical',
       VERSION: '0.0.0',
       ENVIRONMENT: 'development',
-      USER_ID: '00000000-0000-0000-0000-000000000001', // fallback user ID
+      USER_EMAIL: 'default@example.com', // fallback user email
     };
   }
   return window.appConfig;
