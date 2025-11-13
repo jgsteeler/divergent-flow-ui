@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.7...v0.2.0) (2025-11-13)
+
+
+### Features
+
+* add GitHub Actions workflows for release and CI processes ([#2](https://github.com/jgsteeler/divergent-flow-ui/issues/2)) ([f90b826](https://github.com/jgsteeler/divergent-flow-ui/commit/f90b826570de6f0b26fff0c9a3ffec18af3d1618))
+* update README and add LICENSE file for project documentation ([#1](https://github.com/jgsteeler/divergent-flow-ui/issues/1)) ([8f2b9dd](https://github.com/jgsteeler/divergent-flow-ui/commit/8f2b9dd653f3e88b48343cabdf90f5bea7e43e5d))
+
 ### [0.1.8](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.7...v0.1.8) (2025-10-29)
 
 
