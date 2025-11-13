@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import type { UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 import { readFileSync } from 'fs';
@@ -13,4 +14,21 @@ export default defineConfig({
   define: {
     'import.meta.env.VITE_UI_VERSION': JSON.stringify(version),
   },
-})
+  test: {
+    globals: true,
+    environment: 'happy-dom',
+    setupFiles: ['./vitest.setup.ts'],
+    css: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'dist/',
+        '*.config.ts',
+        '**/*.d.ts',
+        'scripts/',
+      ],
+    },
+  },
+} as UserConfig)

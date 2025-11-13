@@ -23,7 +23,7 @@ const config = {
   NEURO_MODE: env.NEURO_MODE || 'typical',
   ENVIRONMENT: env.ENVIRONMENT || 'development',
   VERSION: pkg.version || '0.0.0',
-  USER_ID: env.USER_ID || '00000000-0000-0000-0000-000000000001',
+  USER_EMAIL: env.USER_EMAIL || 'default@example.com',
 };
 
 // Ensure dist/config exists
