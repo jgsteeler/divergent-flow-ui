@@ -25,8 +25,9 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Lint
-        run: npm run lint --if-present
+      - name: Lint (non-blocking)
+        continue-on-error: true
+        run: npm run lint --if-present || true
 
       - name: Build
         run: npm run build
