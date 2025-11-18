@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useAuth } from '../context/useAuth';
+import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 
 interface TopNavProps {
@@ -17,6 +19,7 @@ export default function TopNav({
   onNavigate,
 }: TopNavProps) {
   const [aboutOpen, setAboutOpen] = useState(false);
+  const { user, login, logout } = useAuth();
 
   const navLinkStyle = (page: string) => ({
     padding: '12px 20px',
@@ -151,6 +154,46 @@ export default function TopNav({
               </div>
             </div>
           </>
+        )}
+      </div>
+
+      {/* Auth Buttons */}
+      <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
+        {user ? (
+          <>
+            <span style={{ color: theme.background, fontSize: '14px', alignSelf: 'center' }}>
+              Welcome, {(user.profile as UserProfile)?.name || (user.profile as UserProfile)?.email || user.profile?.sub}
+            </span>
+            <button
+              onClick={logout}
+              style={{
+                padding: '8px 16px',
+                background: theme.accent,
+                color: theme.background,
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '14px',
+              }}
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <button
+            onClick={login}
+            style={{
+              padding: '8px 16px',
+              background: theme.accent,
+              color: theme.background,
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+            }}
+          >
+            Login
+          </button>
         )}
       </div>
     </nav>
