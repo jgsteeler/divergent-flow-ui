@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.2.0...v0.3.0) (2025-11-21)
+
+
+### Features
+
+* integrate OIDC authentication and update capture services to us… ([#6](https://github.com/jgsteeler/divergent-flow-ui/issues/6)) ([ef4f704](https://github.com/jgsteeler/divergent-flow-ui/commit/ef4f704ad4bfeb07312f7394e6716f6ef33cc01c))
+
 ## [0.2.0](https://github.com/jgsteeler/divergent-flow-ui/compare/v0.1.7...v0.2.0) (2025-11-13)
 
 
