@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, Mock } from 'vitest';
 import { captureService } from '../../src/api/services/captureService';
 import * as ApiClient from '../../src/api/ApiClient';
 import type { Capture, CreateCaptureRequest, UpdateCaptureRequest } from '../../src/api/schemas/captureSchema';
@@ -9,7 +9,7 @@ vi.mock('../../src/api/ApiClient', () => ({
 }));
 
 describe('captureService', () => {
-  const mockApiClient = ApiClient.apiClient as any;
+  const mockApiClient = ApiClient.apiClient as Mock;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -28,12 +28,12 @@ describe('captureService', () => {
         rawText: 'Test capture',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        migrated: false,
+        migratedDate: null,
       };
 
       mockApiClient.mockResolvedValue(mockResponse);
 
-      const result = await captureService.createCapture(request);
+      const result = await captureService.createCapture(request, 'mock-token');
 
       expect(mockApiClient).toHaveBeenCalledWith(
         '/v1/capture',
@@ -41,6 +41,9 @@ describe('captureService', () => {
         {
           method: 'POST',
           body: JSON.stringify(request),
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
         }
       );
       expect(result).toEqual(mockResponse);
@@ -54,13 +57,14 @@ describe('captureService', () => {
 
       mockApiClient.mockRejectedValue(new Error('API Error'));
 
-      await expect(captureService.createCapture(request)).rejects.toThrow('API Error');
+      await expect(captureService.createCapture(request, 'mock-token')).rejects.toThrow('API Error');
     });
   });
 
   describe('listCapturesByUser', () => {
     it('should list captures by user ID', async () => {
       const userId = 'user-123';
+      const mockToken = 'mock-token';
       const mockCaptures: Capture[] = [
         {
           id: 'capture-1',
@@ -68,7 +72,7 @@ describe('captureService', () => {
           rawText: 'Capture 1',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          migrated: false,
+          migratedDate: null,
         },
         {
           id: 'capture-2',
@@ -76,18 +80,23 @@ describe('captureService', () => {
           rawText: 'Capture 2',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          migrated: false,
+          migratedDate: null,
         },
       ];
 
       mockApiClient.mockResolvedValue(mockCaptures);
 
-      const result = await captureService.listCapturesByUser(userId);
+      const result = await captureService.listCapturesByUser(userId, mockToken);
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/user/${userId}`,
         expect.anything(),
-        { method: 'GET' }
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
+        }
       );
       expect(result).toEqual(mockCaptures);
     });
@@ -96,6 +105,7 @@ describe('captureService', () => {
   describe('listCapturesByEmail', () => {
     it('should list captures by email without migrated filter', async () => {
       const email = 'test@example.com';
+      const mockToken = 'mock-token';
       const mockCaptures: Capture[] = [
         {
           id: 'capture-1',
@@ -103,64 +113,87 @@ describe('captureService', () => {
           rawText: 'Capture 1',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          migrated: false,
+          migratedDate: null,
         },
       ];
 
       mockApiClient.mockResolvedValue(mockCaptures);
 
-      const result = await captureService.listCapturesByEmail(email);
+      const result = await captureService.listCapturesByEmail(email, mockToken);
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/user/email/${encodeURIComponent(email)}`,
         expect.anything(),
-        { method: 'GET' }
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
+        }
       );
       expect(result).toEqual(mockCaptures);
     });
 
     it('should list captures by email with migrated=true filter', async () => {
       const email = 'test@example.com';
+      const mockToken = 'mock-token';
       const mockCaptures: Capture[] = [];
 
       mockApiClient.mockResolvedValue(mockCaptures);
 
-      const result = await captureService.listCapturesByEmail(email, true);
+      const result = await captureService.listCapturesByEmail(email, mockToken, true);
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/user/email/${encodeURIComponent(email)}?migrated=true`,
         expect.anything(),
-        { method: 'GET' }
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
+        }
       );
       expect(result).toEqual(mockCaptures);
     });
 
     it('should list captures by email with migrated=false filter', async () => {
       const email = 'test@example.com';
+      const mockToken = 'mock-token';
       const mockCaptures: Capture[] = [];
 
       mockApiClient.mockResolvedValue(mockCaptures);
 
-      const result = await captureService.listCapturesByEmail(email, false);
+      const result = await captureService.listCapturesByEmail(email, mockToken, false);
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/user/email/${encodeURIComponent(email)}?migrated=false`,
         expect.anything(),
-        { method: 'GET' }
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
+        }
       );
       expect(result).toEqual(mockCaptures);
     });
 
     it('should properly encode email addresses with special characters', async () => {
       const email = 'test+tag@example.com';
+      const mockToken = 'mock-token';
       mockApiClient.mockResolvedValue([]);
 
-      await captureService.listCapturesByEmail(email);
+      await captureService.listCapturesByEmail(email, mockToken);
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/user/email/${encodeURIComponent(email)}`,
         expect.anything(),
-        { method: 'GET' }
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
+        }
       );
     });
   });
@@ -169,8 +202,9 @@ describe('captureService', () => {
     it('should update a capture successfully', async () => {
       const request: UpdateCaptureRequest = {
         id: 'capture-123',
+        userId: 'user-123',
         rawText: 'Updated text',
-        migrated: true,
+        migratedDate: new Date().toISOString(),
       };
 
       const mockResponse: Capture = {
@@ -179,12 +213,12 @@ describe('captureService', () => {
         rawText: 'Updated text',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        migrated: true,
+        migratedDate: new Date().toISOString(),
       };
 
       mockApiClient.mockResolvedValue(mockResponse);
 
-      const result = await captureService.updateCapture(request);
+      const result = await captureService.updateCapture(request, 'mock-token');
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/${request.id}`,
@@ -192,6 +226,9 @@ describe('captureService', () => {
         {
           method: 'PUT',
           body: JSON.stringify(request),
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
         }
       );
       expect(result).toEqual(mockResponse);
@@ -204,12 +241,17 @@ describe('captureService', () => {
 
       mockApiClient.mockResolvedValue(undefined);
 
-      await captureService.deleteCapture(captureId);
+      await captureService.deleteCapture(captureId, 'mock-token');
 
       expect(mockApiClient).toHaveBeenCalledWith(
         `/v1/capture/${captureId}`,
         expect.anything(),
-        { method: 'DELETE' }
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: 'Bearer mock-token',
+          },
+        }
       );
     });
 
@@ -218,7 +260,9 @@ describe('captureService', () => {
 
       mockApiClient.mockRejectedValue(new Error('Delete failed'));
 
-      await expect(captureService.deleteCapture(captureId)).rejects.toThrow('Delete failed');
+      await expect(captureService.deleteCapture(captureId, 'mock-token')).rejects.toThrow('Delete failed');
     });
   });
+
+
 });
