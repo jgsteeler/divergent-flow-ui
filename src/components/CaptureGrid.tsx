@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { captureService } from '../api/services/captureService';
-import { userService } from '../api/services/userService';
-import { getConfig } from '../config';
+import { useAuth } from '../context/useAuth';
+import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 import type { Capture } from '../api/schemas/captureSchema';
 
@@ -16,14 +16,21 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const { user } = useAuth();
 
   const loadCaptures = async () => {
+    if (!user || !user.access_token) {
+      setError('You must be logged in to view captures');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
-      const email = getConfig().USER_EMAIL || 'default@example.com';
-      const userId = await userService.getUserIdByEmail(email);
-      const allCaptures = await captureService.listCapturesByUser(userId);
+      const userId = (user.profile as UserProfile)?.sub as string;
+      const token = user.access_token;
+      const allCaptures = await captureService.listCapturesByUser(userId, token);
       
       // Filter for unmigrated captures only
       const unmigrated = allCaptures.filter(capture => !capture.migratedDate);
@@ -51,17 +58,23 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   };
 
   const handleEditSave = async (capture: Capture) => {
+    if (!user || !user.access_token) {
+      alert('You must be logged in to update captures');
+      return;
+    }
+
     if (!editText.trim()) {
       alert('Capture text cannot be empty');
       return;
     }
 
     try {
+      const token = user.access_token;
       await captureService.updateCapture({
         id: capture.id,
         userId: capture.userId,
         rawText: editText.trim(),
-      });
+      }, token);
       
       // Update local state
       setCaptures(captures.map(c => 
@@ -77,12 +90,18 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   };
 
   const handleDelete = async (id: string) => {
+    if (!user || !user.access_token) {
+      alert('You must be logged in to delete captures');
+      return;
+    }
+
     if (!confirm('Are you sure you want to delete this capture?')) {
       return;
     }
 
     try {
-      await captureService.deleteCapture(id);
+      const token = user.access_token;
+      await captureService.deleteCapture(id, token);
       setCaptures(captures.filter(c => c.id !== id));
     } catch (err) {
       console.error('Failed to delete capture:', err);

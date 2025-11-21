@@ -43,10 +43,10 @@ describe('preferences utility', () => {
   });
 
   describe('getNeuroMode', () => {
-    it('should return config default when nothing is stored', () => {
+    it('should return "typical" by default when nothing is stored', () => {
       (localStorage.getItem as any).mockReturnValue(null);
       const mode = getNeuroMode();
-      expect(mode).toBe('divergent'); // Based on mocked config
+      expect(mode).toBe('typical');
     });
 
     it('should return "typical" when stored value is "typical"', () => {
@@ -59,10 +59,10 @@ describe('preferences utility', () => {
       expect(getNeuroMode()).toBe('divergent');
     });
 
-    it('should return config default for invalid stored values', () => {
+    it('should return "typical" for invalid stored values', () => {
       (localStorage.getItem as any).mockReturnValue('invalid');
       const mode = getNeuroMode();
-      expect(mode).toBe('divergent');
+      expect(mode).toBe('typical');
     });
   });
 

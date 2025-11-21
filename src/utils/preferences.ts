@@ -1,5 +1,6 @@
 // src/utils/preferences.ts
-import { getConfig } from '../config';
+// User preferences stored in localStorage
+// TODO: Move to database user profile for persistence across devices
 
 const LOCAL_STORAGE_MODE_KEY = 'uiMode';
 const LOCAL_STORAGE_NEURO_KEY = 'neuroMode';
@@ -10,8 +11,7 @@ export type NeuroMode = 'typical' | 'divergent';
 export function getUiMode(): UiMode {
   const saved = localStorage.getItem(LOCAL_STORAGE_MODE_KEY);
   if (saved === 'light' || saved === 'dark') return saved;
-  // Default to 'light' if nothing is set in localStorage
-  return 'light';
+  return 'light'; // Default to light mode
 }
 
 export function setUiMode(mode: UiMode) {
@@ -21,7 +21,7 @@ export function setUiMode(mode: UiMode) {
 export function getNeuroMode(): NeuroMode {
   const saved = localStorage.getItem(LOCAL_STORAGE_NEURO_KEY);
   if (saved === 'typical' || saved === 'divergent') return saved;
-  return getConfig().NEURO_MODE;
+  return 'typical'; // Default to typical mode
 }
 
 export function setNeuroMode(mode: NeuroMode) {

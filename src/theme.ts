@@ -1,5 +1,4 @@
 // src/theme.ts
-import { getConfig } from './config';
 
 export const GSC_LIGHT = {
   primary: '#004687', // deep blue
@@ -17,7 +16,7 @@ export const GSC_DARK = {
   text: '#F7FAFC',
 };
 
-// Non-prod environment backgrounds (light pea green tint)
+// Non-prod environment backgrounds (light pea green tint) - used on staging
 const GSC_LIGHT_NONPROD = {
   ...GSC_LIGHT,
   background: '#d4edda', // stronger light pea green
@@ -35,10 +34,11 @@ export const lightTheme = GSC_LIGHT;
 export const darkTheme = GSC_DARK;
 
 export function getTheme(mode: 'light' | 'dark'): Theme {
-  const { ENVIRONMENT } = getConfig();
-  const isNonProd = ENVIRONMENT && !['production', 'localprod'].includes(ENVIRONMENT.toLowerCase());
+  // Check if we're on the production domain
+  const hostname = window.location.hostname;
+  const isProd = hostname === 'divergentflow.netlify.app' || hostname === 'divergentflow.com';
   
-  if (isNonProd) {
+  if (!isProd) {
     return mode === 'dark' ? GSC_DARK_NONPROD : GSC_LIGHT_NONPROD;
   }
   

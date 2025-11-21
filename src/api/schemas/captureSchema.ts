@@ -18,6 +18,7 @@ export const UpdateCaptureRequestSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
   rawText: z.string().min(1, 'Capture text cannot be empty'),
+  migratedDate: z.string().datetime().nullable().optional(),
 });
 
 export const CaptureListSchema = z.array(CaptureSchema);
