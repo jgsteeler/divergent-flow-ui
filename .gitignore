@@ -25,5 +25,5 @@ dist-ssr
 
 # Environment files
 .env
-.env.dev
-.env.staging
+.env.*
+

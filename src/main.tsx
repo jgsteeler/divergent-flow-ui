@@ -16,8 +16,6 @@ const fetchConfig = async (): Promise<IAppConfig> => {
   } catch (error) {
     console.error('Could not fetch runtime configuration. Falling back to defaults.', error);
     return {
-      API_BASE_URL: 'http://localhost:3000/api',
-      NEURO_MODE: 'typical',
       VERSION: '0.0.0',
     };
   }

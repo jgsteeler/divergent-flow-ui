@@ -1,34 +1,58 @@
+# Netlify configuration for both staging and production
+# Staging project (divflow-staging): deploys from 'develop' branch
+# Production project (divergentflow): deploys from 'main' branch
+
 [build]
   publish = "dist"
   command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "20"
-  VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
-  VITE_OIDC_ISSUER = "https://divergent-flow-keycloak.fly.dev/realms/df-staging"
-  VITE_OIDC_CLIENT_ID = "web-app"
-  VITE_OIDC_REDIRECT_URI = "https://staging-ui.netlify.app/auth/callback"
 
-[[redirects]]
-  from = "/auth/callback"
-  to = "/auth/callback"
-  status = 200
+# Environment variables defined per context below
+# Free tier: these are loaded from netlify.toml (no UI configuration needed)
 
+# Staging environment (develop branch)
+[context.develop]
+  [context.develop.environment]
+    VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
+    VITE_OIDC_ISSUER_URL = "https://divergent-flow-keycloak.fly.dev/realms/df-staging"
+    VITE_OIDC_CLIENT_ID = "web-app"
+    VITE_OIDC_REDIRECT_URI = "https://divflow-staging.netlify.app/auth/callback"
+    VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://divflow-staging.netlify.app"
+    VITE_OIDC_SCOPES = "openid profile email"
+
+# Production environment (main branch)
+[context.production]
+  [context.production.environment]
+    VITE_API_URL = "https://divergent-flow-gateway.gscdev.workers.dev"
+    VITE_OIDC_ISSUER_URL = "https://auth.divergentflow.com/realms/df-prod"
+    VITE_OIDC_CLIENT_ID = "web-app"
+    VITE_OIDC_REDIRECT_URI = "https://divergentflow.netlify.app/auth/callback"
+    VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://divergentflow.netlify.app"
+    VITE_OIDC_SCOPES = "openid profile email"
+
+# Deploy previews from PRs (uses staging environment)
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
+    VITE_OIDC_ISSUER_URL = "https://divergent-flow-keycloak.fly.dev/realms/df-staging"
+    VITE_OIDC_CLIENT_ID = "web-app"
+    VITE_OIDC_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app/auth/callback"
+    VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app"
+    VITE_OIDC_SCOPES = "openid profile email"
+
+# SPA routing - serve index.html for all routes
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-[context.staging]
-  [context.staging.environment]
-    VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
-    VITE_OIDC_ISSUER = "https://divergent-flow-keycloak.fly.dev/realms/df-staging"
-    VITE_OIDC_CLIENT_ID = "web-app"
-    VITE_OIDC_REDIRECT_URI = "https://staging-ui.netlify.app/auth/callback"
-
-[context.production]
-  [context.production.environment]
-    VITE_API_URL = "https://divergent-flow-gateway.gscdev.workers.dev"
-    VITE_OIDC_ISSUER = "https://auth.divergentflow.com/realms/df-prod"
-    VITE_OIDC_CLIENT_ID = "web-app"
-    VITE_OIDC_REDIRECT_URI = "https://app.divergentflow.com/auth/callback"
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"

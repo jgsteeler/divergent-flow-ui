@@ -1,11 +1,9 @@
 // src/config.ts
-// Define the expected shape of your runtime configuration
+// Runtime configuration for the application
+// Version is loaded from config.json (generated from package.json at build time)
+// User preferences (neuroMode, etc) will be stored in database user profile
 export interface IAppConfig {
-  API_BASE_URL: string;
-  NEURO_MODE: 'typical' | 'divergent';
   VERSION: string;
-  ENVIRONMENT?: string;
-  USER_EMAIL?: string;
 }
 
 // Global variable to hold the config (populated by the main script)
@@ -18,14 +16,9 @@ declare global {
 // Export a getter for easy access
 export const getConfig = (): IAppConfig => {
   if (!window.appConfig) {
-    // In a real app, you might want to throw an error or use a default config
-    console.error("Application configuration not loaded!");
+    console.warn("Application configuration not loaded, using defaults");
     return { 
-      API_BASE_URL: 'http://localhost:3000/api', 
-      NEURO_MODE: 'typical',
       VERSION: '0.0.0',
-      ENVIRONMENT: 'development',
-      USER_EMAIL: 'default@example.com', // fallback user email
     };
   }
   return window.appConfig;
