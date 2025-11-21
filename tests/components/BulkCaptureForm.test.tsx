@@ -5,10 +5,14 @@ import BulkCaptureForm from '../../src/components/BulkCaptureForm';
 import * as captureService from '../../src/api/services/captureService';
 import * as userService from '../../src/api/services/userService';
 import { lightTheme } from '../../src/theme';
+import * as useAuthModule from '../../src/context/useAuth';
 
 // Mock the services
 vi.mock('../../src/api/services/captureService');
 vi.mock('../../src/api/services/userService');
+
+// Mock useAuth hook
+const mockUseAuth = vi.fn();
 
 describe('BulkCaptureForm', () => {
   const mockOnCapturesCreated = vi.fn();
@@ -16,11 +20,24 @@ describe('BulkCaptureForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (userService.userService.getUserIdByEmail as any) = vi.fn().mockResolvedValue('user-123');
+    (userService.userService.getUserIdByEmail as any).mockResolvedValue('user-123');
+    
+    // Mock useAuth to return authenticated user
+    vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
+      user: {
+        access_token: 'mock-token',
+        profile: { sub: 'user-123' },
+      } as any,
+      isLoading: false,
+      login: vi.fn(),
+      logout: vi.fn(),
+    });
   });
 
   it('should render the form with title and textarea', () => {
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+      <BulkCaptureForm theme={mockTheme} />
+    );
 
     expect(screen.getByText('Bulk Capture')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Enter multiple captures, one per line...')).toBeInTheDocument();
@@ -28,7 +45,9 @@ describe('BulkCaptureForm', () => {
 
   it('should show item count in description', async () => {
     const user = userEvent.setup();
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     
@@ -39,7 +58,9 @@ describe('BulkCaptureForm', () => {
 
   it('should show singular "item" for one capture', async () => {
     const user = userEvent.setup();
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     
@@ -49,7 +70,9 @@ describe('BulkCaptureForm', () => {
   });
 
   it('should disable submit button when textarea is empty', () => {
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const submitButton = screen.getByRole('button');
     expect(submitButton).toBeDisabled();
@@ -58,7 +81,9 @@ describe('BulkCaptureForm', () => {
 
   it('should filter out empty lines in count', async () => {
     const user = userEvent.setup();
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     
@@ -69,7 +94,9 @@ describe('BulkCaptureForm', () => {
 
   it('should show error for empty submission', async () => {
     const user = userEvent.setup();
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
 
@@ -98,7 +125,9 @@ describe('BulkCaptureForm', () => {
       migrated: false,
     });
 
-    render(<BulkCaptureForm theme={mockTheme} onCapturesCreated={mockOnCapturesCreated} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} onCapturesCreated={mockOnCapturesCreated} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     const submitButton = screen.getByRole('button');
@@ -113,15 +142,15 @@ describe('BulkCaptureForm', () => {
     expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
       userId: 'user-123',
       rawText: 'First capture',
-    });
+    }, 'mock-token');
     expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
       userId: 'user-123',
       rawText: 'Second capture',
-    });
+    }, 'mock-token');
     expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
       userId: 'user-123',
       rawText: 'Third capture',
-    });
+    }, 'mock-token');
 
     await waitFor(() => {
       expect(screen.getByText('✓ Successfully captured 3 items!')).toBeInTheDocument();
@@ -142,7 +171,9 @@ describe('BulkCaptureForm', () => {
       migrated: false,
     });
 
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     const submitButton = screen.getByRole('button');
@@ -154,11 +185,11 @@ describe('BulkCaptureForm', () => {
       expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
         userId: 'user-123',
         rawText: 'First capture',
-      });
+      }, 'mock-token');
       expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
         userId: 'user-123',
         rawText: 'Second capture',
-      });
+      }, 'mock-token');
     });
   });
 
@@ -168,7 +199,9 @@ describe('BulkCaptureForm', () => {
       new Error('Network error')
     );
 
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     const submitButton = screen.getByRole('button');
@@ -191,7 +224,9 @@ describe('BulkCaptureForm', () => {
       new Promise(resolve => { resolveCapture = resolve; })
     );
 
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     const submitButton = screen.getByRole('button');
@@ -225,7 +260,9 @@ describe('BulkCaptureForm', () => {
 
   it('should update button text based on item count', async () => {
     const user = userEvent.setup();
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
 
@@ -247,7 +284,9 @@ describe('BulkCaptureForm', () => {
       migrated: false,
     });
 
-    render(<BulkCaptureForm theme={mockTheme} />);
+    render(
+        <BulkCaptureForm theme={mockTheme} />
+    );
 
     const textarea = screen.getByPlaceholderText('Enter multiple captures, one per line...');
     const submitButton = screen.getByRole('button');

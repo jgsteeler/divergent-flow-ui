@@ -1,7 +1,6 @@
 // src/api/ApiClient.ts
 import { z } from 'zod';
 import type { ZodSchema } from 'zod';
-import { getConfig } from '../config';
 
 export class ApiError extends Error {
   status: number;
@@ -17,7 +16,8 @@ export async function apiClient<T>(
   schema: ZodSchema<T>,
   options: RequestInit = {}
 ): Promise<T> {
-  const baseUrl = getConfig().API_BASE_URL;
+  // Use VITE_API_URL injected at build time by Vite
+  const baseUrl = import.meta.env.VITE_API_URL;
   const url = `${baseUrl}${path}`;
   // Auth will be added later (client credentials)
   // const token = localStorage.getItem('authToken');

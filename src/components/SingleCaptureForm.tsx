@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
-import { userService } from '../api/services/userService';
-import { getConfig } from '../config';
+import { useAuth } from '../context/useAuth';
+import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 
 interface SingleCaptureFormProps {
@@ -14,6 +14,7 @@ export default function SingleCaptureForm({ theme, onCaptureCreated }: SingleCap
   const [captureText, setCaptureText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const { user } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -23,16 +24,21 @@ export default function SingleCaptureForm({ theme, onCaptureCreated }: SingleCap
       return;
     }
 
+    if (!user || !user.access_token) {
+      setFeedback({ type: 'error', message: 'You must be logged in to capture' });
+      return;
+    }
+
     setIsSubmitting(true);
     setFeedback(null);
 
     try {
-      const email = getConfig().USER_EMAIL || 'default@example.com';
-      const userId = await userService.getUserIdByEmail(email);
+      const userId = (user.profile as UserProfile)?.sub as string;
+      const token = user.access_token;
       await captureService.createCapture({
         userId,
         rawText: captureText.trim(),
-      });
+      }, token);
       
       setFeedback({ type: 'success', message: '✓ Captured successfully!' });
       setCaptureText('');

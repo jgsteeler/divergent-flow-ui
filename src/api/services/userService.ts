@@ -10,23 +10,26 @@ export const userService = {
   /**
    * Get user by email
    */
-  getUserByEmail: async (email: string): Promise<User> => {
+  getUserByEmail: async (email: string, token: string): Promise<User> => {
     return apiClient(`/v1/user/email/${encodeURIComponent(email)}`, UserSchema, {
       method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
   },
 
   /**
    * Get user ID from email (with caching)
    */
-  getUserIdByEmail: async (email: string): Promise<string> => {
+  getUserIdByEmail: async (email: string, token: string): Promise<string> => {
     // Return cached ID if email matches
     if (cachedEmail === email && cachedUserId) {
       return cachedUserId;
     }
 
     // Fetch user and cache the result
-    const user = await userService.getUserByEmail(email);
+    const user = await userService.getUserByEmail(email, token);
     cachedEmail = email;
     cachedUserId = user.id;
     

@@ -1,29 +1,20 @@
 // scripts/generate-config.mjs
+// Generates runtime config.json with app version from package.json
+// API URL is handled by VITE_API_URL environment variable (injected at build time)
+// User preferences (like neuroMode) will be stored in database user profile
 import fs from 'fs';
 import path from 'path';
-import dotenv from 'dotenv';
 
-const envPath = path.resolve(process.cwd(), '.env.dev');
 const pkgPath = path.resolve(process.cwd(), 'package.json');
 const distConfigDir = path.resolve(process.cwd(), 'dist/config');
 const distConfigFile = path.join(distConfigDir, 'config.json');
 
-// Load .env
-let env = {};
-if (fs.existsSync(envPath)) {
-  env = dotenv.parse(fs.readFileSync(envPath));
-}
-
-// Load package.json
+// Load package.json for version
 const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
-// Compose config
+// Minimal config - just version info for the UI
 const config = {
-  API_BASE_URL: env.API_BASE_URL || 'http://localhost:8081',
-  NEURO_MODE: env.NEURO_MODE || 'typical',
-  ENVIRONMENT: env.ENVIRONMENT || 'development',
   VERSION: pkg.version || '0.0.0',
-  USER_EMAIL: env.USER_EMAIL || 'default@example.com',
 };
 
 // Ensure dist/config exists
