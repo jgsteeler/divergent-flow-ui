@@ -58,21 +58,25 @@ export default function TopNav({
         🏠 Home
       </button>
 
-      {/* Capture Link */}
-      <button
-        onClick={() => onNavigate('capture')}
-        style={navLinkStyle('capture')}
-      >
-        📝 Capture
-      </button>
+      {/* Capture Link - Only show for authenticated users */}
+      {user && (
+        <button
+          onClick={() => onNavigate('capture')}
+          style={navLinkStyle('capture')}
+        >
+          📝 Capture
+        </button>
+      )}
 
-      {/* Settings Link */}
-      <button
-        onClick={() => onNavigate('settings')}
-        style={navLinkStyle('settings')}
-      >
-        ⚙️ Settings
-      </button>
+      {/* Settings Link - Only show for authenticated users */}
+      {user && (
+        <button
+          onClick={() => onNavigate('settings')}
+          style={navLinkStyle('settings')}
+        >
+          ⚙️ Settings
+        </button>
+      )}
 
       {/* About Dropdown */}
       <div style={{ position: 'relative' }}>

@@ -4,10 +4,12 @@ import { versionService } from './api/services/versionService';
 import { getUiMode, setUiMode, getNeuroMode, setNeuroMode } from './utils/preferences';
 import type { UiMode, NeuroMode } from './utils/preferences';
 import { getConfig } from './config';
+import { useAuth } from './context/useAuth';
 import DivergentDashboard from './components/DivergentDashboard';
 import TopNav from './components/TopNav';
 import SettingsPage from './pages/SettingsPage';
 import CapturePage from './pages/CapturePage';
+import AnonymousHomePage from './pages/AnonymousHomePage';
 
 
 function useApiVersion() {
@@ -34,6 +36,7 @@ function useUiVersion() {
   return getConfig().VERSION || 'unknown';
 }
 export default function LandingPage() {
+  const { user, isLoading, login } = useAuth();
   const [mode, setModeState] = useState<UiMode>(getUiMode());
   const [neuroMode, setNeuroModeState] = useState<NeuroMode>(getNeuroMode());
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -66,8 +69,29 @@ export default function LandingPage() {
   const toggleMode = () => setModeState(mode === 'light' ? 'dark' : 'light');
   const toggleNeuroMode = () => setNeuroModeState(neuroMode === 'typical' ? 'divergent' : 'typical');
 
-  // Route to divergent dashboard if in divergent mode
-  if (neuroMode === 'divergent') {
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          background: theme.background,
+          color: theme.text,
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⏳</div>
+          <div style={{ fontSize: '18px' }}>Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Route to divergent dashboard if in divergent mode (only for authenticated users)
+  if (user && neuroMode === 'divergent') {
     return (
       <DivergentDashboard
         theme={theme}
@@ -83,6 +107,12 @@ export default function LandingPage() {
 
   // Render page content based on current route
   const renderPage = () => {
+    // Show anonymous home page for unauthenticated users
+    if (!user) {
+      return <AnonymousHomePage theme={theme} onLogin={login} />;
+    }
+
+    // Protected pages - require authentication
     switch (currentPage) {
       case 'settings':
         return (
