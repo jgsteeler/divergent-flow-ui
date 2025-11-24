@@ -42,7 +42,10 @@ export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageP
         </p>
 
         <button
-          onClick={onLogin}
+          onClick={() => {
+            console.log('Get Started button clicked, calling onLogin');
+            onLogin();
+          }}
           style={{
             marginTop: '1.5rem',
             padding: '16px 48px',
