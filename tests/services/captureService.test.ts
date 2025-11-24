@@ -36,7 +36,7 @@ describe('captureService', () => {
       const result = await captureService.createCapture(request, 'mock-token');
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        '/v1/capture',
+        '/api/capture',
         expect.anything(),
         {
           method: 'POST',
@@ -89,7 +89,7 @@ describe('captureService', () => {
       const result = await captureService.listCapturesByUser(userId, mockToken);
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/user/${userId}`,
+        `/api/capture/user/${userId}`,
         expect.anything(),
         {
           method: 'GET',
@@ -122,7 +122,7 @@ describe('captureService', () => {
       const result = await captureService.listCapturesByEmail(email, mockToken);
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/user/email/${encodeURIComponent(email)}`,
+        `/api/capture/user/email/${encodeURIComponent(email)}`,
         expect.anything(),
         {
           method: 'GET',
@@ -144,7 +144,7 @@ describe('captureService', () => {
       const result = await captureService.listCapturesByEmail(email, mockToken, true);
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/user/email/${encodeURIComponent(email)}?migrated=true`,
+        `/api/capture/user/email/${encodeURIComponent(email)}?migrated=true`,
         expect.anything(),
         {
           method: 'GET',
@@ -166,7 +166,7 @@ describe('captureService', () => {
       const result = await captureService.listCapturesByEmail(email, mockToken, false);
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/user/email/${encodeURIComponent(email)}?migrated=false`,
+        `/api/capture/user/email/${encodeURIComponent(email)}?migrated=false`,
         expect.anything(),
         {
           method: 'GET',
@@ -186,7 +186,7 @@ describe('captureService', () => {
       await captureService.listCapturesByEmail(email, mockToken);
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/user/email/${encodeURIComponent(email)}`,
+        `/api/capture/user/email/${encodeURIComponent(email)}`,
         expect.anything(),
         {
           method: 'GET',
@@ -221,7 +221,7 @@ describe('captureService', () => {
       const result = await captureService.updateCapture(request, 'mock-token');
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/${request.id}`,
+        `/api/capture/${request.id}`,
         expect.anything(),
         {
           method: 'PUT',
@@ -244,7 +244,7 @@ describe('captureService', () => {
       await captureService.deleteCapture(captureId, 'mock-token');
 
       expect(mockApiClient).toHaveBeenCalledWith(
-        `/v1/capture/${captureId}`,
+        `/api/capture/${captureId}`,
         expect.anything(),
         {
           method: 'DELETE',

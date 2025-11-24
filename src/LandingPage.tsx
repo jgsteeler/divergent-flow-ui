@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { getTheme } from './theme';
-import { versionService } from './api/services/versionService';
 import { getUiMode, setUiMode, getNeuroMode, setNeuroMode } from './utils/preferences';
 import type { UiMode, NeuroMode } from './utils/preferences';
 import { getConfig } from './config';
@@ -12,25 +11,6 @@ import CapturePage from './pages/CapturePage';
 import AnonymousHomePage from './pages/AnonymousHomePage';
 
 
-function useApiVersion() {
-  const [apiVersion, setApiVersion] = useState<string>('');
-  const [apiService, setApiService] = useState<string>('');
-  const [apiTimestamp, setApiTimestamp] = useState<string>('');
-  useEffect(() => {
-    versionService.getVersion()
-      .then((d: { version?: string; service?: string; timestamp?: string }) => {
-        setApiVersion(d.version || '');
-        setApiService(d.service || '');
-        setApiTimestamp(d.timestamp || '');
-      })
-      .catch((err: unknown) => {
-        console.error('API version fetch error:', err);
-        setApiVersion('unavailable');
-      });
-  }, []);
-  return { apiVersion, apiService, apiTimestamp };
-}
-
 function useUiVersion() {
   // Use VERSION from runtime config
   return getConfig().VERSION || 'unknown';
@@ -41,7 +21,6 @@ export default function LandingPage() {
   const [neuroMode, setNeuroModeState] = useState<NeuroMode>(getNeuroMode());
   const [currentPage, setCurrentPage] = useState<string>('home');
   const theme = getTheme(mode);
-  const { apiVersion } = useApiVersion();
   const uiVersion = useUiVersion();
 
   // Set body background to match theme
@@ -57,13 +36,6 @@ export default function LandingPage() {
   useEffect(() => {
     setNeuroMode(neuroMode);
   }, [neuroMode]);
-
-  // Debug: log API version fetch errors if any
-  useEffect(() => {
-    if (apiVersion === 'unavailable') {
-      console.error('Failed to fetch API version from versionService');
-    }
-  }, [apiVersion]);
 
   // Toggle functions
   const toggleMode = () => setModeState(mode === 'light' ? 'dark' : 'light');
@@ -96,7 +68,6 @@ export default function LandingPage() {
       <DivergentDashboard
         theme={theme}
         uiVersion={uiVersion}
-        apiVersion={apiVersion}
         mode={mode}
         neuroMode={neuroMode}
         onModeToggle={toggleMode}
@@ -194,7 +165,6 @@ export default function LandingPage() {
         theme={theme}
         currentPage={currentPage}
         uiVersion={uiVersion}
-        apiVersion={apiVersion}
         onNavigate={setCurrentPage}
       />
       {renderPage()}

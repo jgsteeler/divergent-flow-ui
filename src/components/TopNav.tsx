@@ -7,7 +7,6 @@ interface TopNavProps {
   theme: Theme;
   currentPage: string;
   uiVersion: string;
-  apiVersion: string;
   onNavigate: (page: string) => void;
 }
 
@@ -15,7 +14,6 @@ export default function TopNav({
   theme,
   currentPage,
   uiVersion,
-  apiVersion,
   onNavigate,
 }: TopNavProps) {
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -138,10 +136,7 @@ export default function TopNav({
 
               <div style={{ marginBottom: '12px', fontSize: '14px' }}>
                 <div style={{ marginBottom: '8px' }}>
-                  <strong>UI Version:</strong> {uiVersion}
-                </div>
-                <div style={{ marginBottom: '8px' }}>
-                  <strong>API Version:</strong> {apiVersion}
+                  <strong>Version:</strong> {uiVersion}
                 </div>
               </div>
 

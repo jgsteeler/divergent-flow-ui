@@ -11,7 +11,7 @@ export const userService = {
    * Get user by email
    */
   getUserByEmail: async (email: string, token: string): Promise<User> => {
-    return apiClient(`/v1/user/email/${encodeURIComponent(email)}`, UserSchema, {
+    return apiClient(`/api/user/email/${encodeURIComponent(email)}`, UserSchema, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
