@@ -62,10 +62,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [userManager]);
 
   const login = () => {
-    userManager.signinRedirect();
+    console.log('login() called, initiating signinRedirect...');
+    console.log('UserManager config:', {
+      authority: import.meta.env.VITE_OIDC_ISSUER_URL,
+      client_id: import.meta.env.VITE_OIDC_CLIENT_ID,
+      redirect_uri: import.meta.env.VITE_OIDC_REDIRECT_URI,
+    });
+    userManager.signinRedirect().catch((error) => {
+      console.error('signinRedirect error:', error);
+    });
   };
 
   const logout = () => {
+    console.log('logout() called, initiating signoutRedirect...');
     userManager.signoutRedirect();
   };
 

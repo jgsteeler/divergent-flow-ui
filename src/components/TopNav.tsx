@@ -7,7 +7,6 @@ interface TopNavProps {
   theme: Theme;
   currentPage: string;
   uiVersion: string;
-  apiVersion: string;
   onNavigate: (page: string) => void;
 }
 
@@ -15,7 +14,6 @@ export default function TopNav({
   theme,
   currentPage,
   uiVersion,
-  apiVersion,
   onNavigate,
 }: TopNavProps) {
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -58,21 +56,25 @@ export default function TopNav({
         🏠 Home
       </button>
 
-      {/* Capture Link */}
-      <button
-        onClick={() => onNavigate('capture')}
-        style={navLinkStyle('capture')}
-      >
-        📝 Capture
-      </button>
+      {/* Capture Link - Only show for authenticated users */}
+      {user && (
+        <button
+          onClick={() => onNavigate('capture')}
+          style={navLinkStyle('capture')}
+        >
+          📝 Capture
+        </button>
+      )}
 
-      {/* Settings Link */}
-      <button
-        onClick={() => onNavigate('settings')}
-        style={navLinkStyle('settings')}
-      >
-        ⚙️ Settings
-      </button>
+      {/* Settings Link - Only show for authenticated users */}
+      {user && (
+        <button
+          onClick={() => onNavigate('settings')}
+          style={navLinkStyle('settings')}
+        >
+          ⚙️ Settings
+        </button>
+      )}
 
       {/* About Dropdown */}
       <div style={{ position: 'relative' }}>
@@ -134,10 +136,7 @@ export default function TopNav({
 
               <div style={{ marginBottom: '12px', fontSize: '14px' }}>
                 <div style={{ marginBottom: '8px' }}>
-                  <strong>UI Version:</strong> {uiVersion}
-                </div>
-                <div style={{ marginBottom: '8px' }}>
-                  <strong>API Version:</strong> {apiVersion}
+                  <strong>Version:</strong> {uiVersion}
                 </div>
               </div>
 
