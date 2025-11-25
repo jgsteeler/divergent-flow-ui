@@ -42,6 +42,13 @@
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
 
+# Version endpoint - serve config.json
+[[redirects]]
+  from = "/version"
+  to = "/config/config.json"
+  status = 200
+  force = true
+
 # SPA routing - serve index.html for all routes
 [[redirects]]
   from = "/*"

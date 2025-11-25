@@ -14,7 +14,9 @@ const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
 
 // Minimal config - just version info for the UI
 const config = {
-  VERSION: pkg.version || '0.0.0',
+  service: 'divergent-flow-ui',
+  version: pkg.version || '0.0.0',
+  timestamp: new Date().toISOString(),
 };
 
 // Ensure dist/config exists
