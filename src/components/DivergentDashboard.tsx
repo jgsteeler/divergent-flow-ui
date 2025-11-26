@@ -46,7 +46,12 @@ export default function DivergentDashboard({
     setFeedback(null);
 
     try {
-      const userId = sessionStorage.getItem('df_user_id') || (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        setFeedback({ type: 'error', message: 'User ID missing. Please log in again.' });
+        setIsSubmitting(false);
+        return;
+      }
       const token = user.access_token;
       await captureService.createCapture({
         userId,

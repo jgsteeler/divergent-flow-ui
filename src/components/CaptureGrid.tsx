@@ -28,7 +28,12 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
     try {
       setLoading(true);
       setError(null);
-      const userId = sessionStorage.getItem('df_user_id') || (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        setError('User ID is missing. Please log in again.');
+        setLoading(false);
+        return;
+      }
       const token = user.access_token;
       const allCaptures = await captureService.listCapturesByUser(userId, token, false);
       setCaptures(allCaptures);
