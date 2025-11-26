@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
 import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 import type { UiMode, NeuroMode } from '../utils/preferences';
 import HamburgerMenu from './HamburgerMenu';
@@ -46,7 +45,12 @@ export default function DivergentDashboard({
     setFeedback(null);
 
     try {
-      const userId = (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        setFeedback({ type: 'error', message: 'User ID missing. Please log in again.' });
+        setIsSubmitting(false);
+        return;
+      }
       const token = user.access_token;
       await captureService.createCapture({
         userId,

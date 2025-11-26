@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { captureService } from '../api/services/captureService';
 import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 import type { Capture } from '../api/schemas/captureSchema';
 
@@ -28,13 +27,15 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
     try {
       setLoading(true);
       setError(null);
-      const userId = (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        setError('User ID is missing. Please log in again.');
+        setLoading(false);
+        return;
+      }
       const token = user.access_token;
-      const allCaptures = await captureService.listCapturesByUser(userId, token);
-      
-      // Filter for unmigrated captures only
-      const unmigrated = allCaptures.filter(capture => !capture.migratedDate);
-      setCaptures(unmigrated);
+      const allCaptures = await captureService.listCapturesByUser(userId, token, false);
+      setCaptures(allCaptures);
     } catch (err) {
       console.error('Failed to load captures:', err);
       setError(err instanceof Error ? err.message : 'Failed to load captures');

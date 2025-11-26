@@ -14,8 +14,14 @@ export const captureService = {
     });
   },
 
-  listCapturesByUser: async (userId: string, token: string): Promise<Capture[]> => {
-    return apiClient(`/api/capture/user/${userId}`, CaptureListSchema, {
+  listCapturesByUser: async (userId: string, token: string, migrated?: boolean): Promise<Capture[]> => {
+    const params = new URLSearchParams();
+    if (migrated !== undefined) {
+      params.append('migrated', String(migrated));
+    }
+    const queryString = params.toString();
+    const url = `/api/capture/user/${userId}${queryString ? `?${queryString}` : ''}`;
+    return apiClient(url, CaptureListSchema, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
