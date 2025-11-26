@@ -25,10 +25,12 @@ export default function TopNav({
     textDecoration: 'none',
     color: theme.text,
     fontWeight: currentPage === page ? 600 : 400,
+    borderTop: 'none',
+    borderLeft: 'none',
+    borderRight: 'none',
     borderBottom: currentPage === page ? `3px solid ${theme.accent}` : '3px solid transparent',
     transition: 'all 0.2s',
     background: 'transparent',
-    border: 'none',
     fontSize: '16px',
     position: 'relative' as const,
   });

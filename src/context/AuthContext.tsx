@@ -45,12 +45,61 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Handle signin redirect callback
     const handleSigninCallback = async () => {
+      // Prevent double processing in React Strict Mode
+      if (sessionStorage.getItem('auth_callback_processing')) {
+        return;
+      }
+      sessionStorage.setItem('auth_callback_processing', 'true');
+
       try {
         const user = await userManager.signinRedirectCallback();
         setUser(user);
-        window.history.replaceState({}, document.title, window.location.pathname);
+        sessionStorage.removeItem('auth_callback_processing');
+
+        // Provision user in Divergent Flow database
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL;
+          const response = await fetch(`${apiUrl}/api/user/provision-oidc`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user.access_token}`,
+            },
+            body: JSON.stringify({
+              sub: user.profile.sub,
+              email: user.profile.email,
+              email_verified: user.profile.email_verified,
+              preferred_username: user.profile.preferred_username,
+              name: user.profile.name,
+              given_name: user.profile.given_name,
+              family_name: user.profile.family_name,
+            }),
+          });
+
+          if (!response.ok) {
+            console.error('Failed to provision user:', await response.text());
+          } else {
+            const provisionedUser = await response.json();
+            console.log('User provisioned:', provisionedUser);
+            // Store the Divergent Flow user ID for use in captures
+            sessionStorage.setItem('df_user_id', provisionedUser.id);
+          }
+        } catch (provisionError) {
+          console.error('Error provisioning user:', provisionError);
+          // Don't block login if provisioning fails
+        }
+
+        window.history.replaceState({}, document.title, '/');
       } catch (error) {
         console.error('Signin callback error:', error);
+        sessionStorage.removeItem('auth_callback_processing');
+        
+        // If state already consumed (e.g., from hot-reload), check if user is already logged in
+        const existingUser = await userManager.getUser();
+        if (existingUser && !existingUser.expired) {
+          setUser(existingUser);
+          window.history.replaceState({}, document.title, '/');
+        }
       } finally {
         setIsLoading(false);
       }

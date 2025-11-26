@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
 import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 
 interface SingleCaptureFormProps {
@@ -33,7 +32,12 @@ export default function SingleCaptureForm({ theme, onCaptureCreated }: SingleCap
     setFeedback(null);
 
     try {
-      const userId = (user.profile as UserProfile)?.sub as string;
+      // Get the Divergent Flow user ID (stored during login)
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        throw new Error('User not provisioned. Please try logging out and back in.');
+      }
+      
       const token = user.access_token;
       await captureService.createCapture({
         userId,

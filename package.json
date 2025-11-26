@@ -4,7 +4,8 @@
   "version": "0.1.9",
   "type": "module",
   "scripts": {
-    "dev": "serve -s dist -l 6137",
+    "dev": "vite --port 6137",
+    "dev:dist": "serve -s dist -l 6137",
     "build": "tsc -b && vite build",
     "postbuild": "node scripts/generate-config.mjs",
     "lint": "eslint .",
