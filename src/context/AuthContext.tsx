@@ -27,15 +27,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     scope: import.meta.env.VITE_OIDC_SCOPES,
     response_type: 'code',
     userStore: new WebStorageStateStore({ store: window.localStorage }),
+    automaticSilentRenew: true, // Enable automatic token renewal
+    silent_redirect_uri: import.meta.env.VITE_OIDC_REDIRECT_URI, // Use same callback for silent renewal
   }));
 
   useEffect(() => {
     const checkUser = async () => {
       try {
         const currentUser = await userManager.getUser();
-        setUser(currentUser);
+        // Check if user exists and token is not expired
+        if (currentUser && !currentUser.expired) {
+          setUser(currentUser);
+        } else if (currentUser && currentUser.expired) {
+          console.log('User token expired, clearing session');
+          await userManager.removeUser();
+          setUser(null);
+        } else {
+          setUser(null);
+        }
       } catch (error) {
         console.error('Error getting user:', error);
+        setUser(null);
       } finally {
         setIsLoading(false);
       }
