@@ -12,8 +12,8 @@ import AnonymousHomePage from './pages/AnonymousHomePage';
 
 
 function useUiVersion() {
-  // Use VERSION from runtime config
-  return getConfig().VERSION || 'unknown';
+  // Use version from runtime config
+  return getConfig().version || 'unknown';
 }
 export default function LandingPage() {
   const { user, isLoading, login } = useAuth();

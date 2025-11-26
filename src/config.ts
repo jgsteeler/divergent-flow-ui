@@ -3,7 +3,9 @@
 // Version is loaded from config.json (generated from package.json at build time)
 // User preferences (neuroMode, etc) will be stored in database user profile
 export interface IAppConfig {
-  VERSION: string;
+  version: string;
+  service: string;
+  timestamp: string;
 }
 
 // Global variable to hold the config (populated by the main script)
@@ -18,7 +20,9 @@ export const getConfig = (): IAppConfig => {
   if (!window.appConfig) {
     console.warn("Application configuration not loaded, using defaults");
     return { 
-      VERSION: '0.0.0',
+      version: '0.0.0',
+      service: 'divergent-flow-ui',
+      timestamp: new Date().toISOString(),
     };
   }
   return window.appConfig;

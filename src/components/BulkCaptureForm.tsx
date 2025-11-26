@@ -44,7 +44,7 @@ export default function BulkCaptureForm({ theme, onCapturesCreated }: BulkCaptur
     setFeedback(null);
 
     try {
-      const userId = (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id') || (user.profile as UserProfile)?.sub as string;
       const token = user.access_token;
       
       // Create all captures in parallel
