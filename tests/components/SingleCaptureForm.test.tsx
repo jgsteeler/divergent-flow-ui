@@ -19,6 +19,9 @@ describe('SingleCaptureForm', () => {
     vi.clearAllMocks();
     (userService.userService.getUserIdByEmail as any).mockResolvedValue('user-123');
     
+    // Mock sessionStorage with df_user_id
+    sessionStorage.setItem('df_user_id', 'user-123');
+    
     // Mock useAuth to return authenticated user
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: {

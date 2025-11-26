@@ -14,7 +14,6 @@ export default function SingleCaptureForm({ theme, onCaptureCreated }: SingleCap
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const { user } = useAuth();
-  const { user } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
