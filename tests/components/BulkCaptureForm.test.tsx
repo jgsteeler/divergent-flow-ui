@@ -11,6 +11,18 @@ import * as useAuthModule from '../../src/context/useAuth';
 vi.mock('../../src/api/services/captureService');
 vi.mock('../../src/api/services/userService');
 
+// Mock sessionStorage
+const mockSessionStorage = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+Object.defineProperty(window, 'sessionStorage', {
+  value: mockSessionStorage,
+  writable: true,
+});
+
 // Mock useAuth hook
 const mockUseAuth = vi.fn();
 
@@ -20,6 +32,7 @@ describe('BulkCaptureForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSessionStorage.getItem.mockReturnValue('user-123');
     (userService.userService.getUserIdByEmail as any).mockResolvedValue('user-123');
     
     // Mock useAuth to return authenticated user

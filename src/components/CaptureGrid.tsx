@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { captureService } from '../api/services/captureService';
 import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 import type { Capture } from '../api/schemas/captureSchema';
 
