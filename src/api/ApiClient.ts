@@ -26,10 +26,17 @@ export async function apiClient<T>(
     // ...(token && { 'Authorization': `Bearer ${token}` }),
     ...options.headers,
   };
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(url, { 
+    ...options, 
+    headers: {
+      ...headers,
+      'Cache-Control': 'no-cache', // Disable caching to avoid 304 responses
+    }
+  });
+  
   if (!response.ok) {
     let errorDetail = response.statusText;
-  try { errorDetail = await response.text(); } catch { /* ignore parse error */ }
+    try { errorDetail = await response.text(); } catch { /* ignore parse error */ }
     throw new ApiError(`API call failed (${response.status}): ${errorDetail}`, response.status);
   }
   const json = await response.json();

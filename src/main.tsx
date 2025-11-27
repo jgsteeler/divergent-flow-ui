@@ -16,7 +16,9 @@ const fetchConfig = async (): Promise<IAppConfig> => {
   } catch (error) {
     console.error('Could not fetch runtime configuration. Falling back to defaults.', error);
     return {
-      VERSION: '0.0.0',
+      version: '0.0.0',
+      service: 'divergent-flow-ui',
+      timestamp: new Date().toISOString(),
     };
   }
 };

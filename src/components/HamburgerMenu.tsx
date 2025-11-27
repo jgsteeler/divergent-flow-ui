@@ -5,7 +5,6 @@ import type { Theme } from '../theme';
 interface HamburgerMenuProps {
   theme: Theme;
   uiVersion: string;
-  apiVersion: string;
   mode: UiMode;
   neuroMode: NeuroMode;
   onModeToggle: () => void;
@@ -15,7 +14,6 @@ interface HamburgerMenuProps {
 export default function HamburgerMenu({
   theme,
   uiVersion,
-  apiVersion,
   mode,
   neuroMode,
   onModeToggle,
@@ -116,11 +114,8 @@ export default function HamburgerMenu({
                 borderRadius: 8,
               }}
             >
-              <div style={{ fontSize: 14, marginBottom: 8 }}>
-                <strong>UI Version:</strong> {uiVersion}
-              </div>
               <div style={{ fontSize: 14 }}>
-                <strong>API Version:</strong> {apiVersion}
+                <strong>Version:</strong> {uiVersion}
               </div>
             </div>
 

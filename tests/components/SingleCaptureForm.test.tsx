@@ -19,6 +19,9 @@ describe('SingleCaptureForm', () => {
     vi.clearAllMocks();
     (userService.userService.getUserIdByEmail as any).mockResolvedValue('user-123');
     
+    // Mock sessionStorage with df_user_id
+    sessionStorage.setItem('df_user_id', 'user-123');
+    
     // Mock useAuth to return authenticated user
     vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
       user: {
@@ -149,7 +152,7 @@ describe('SingleCaptureForm', () => {
 
   it('should disable form while submitting', async () => {
     const user = userEvent.setup();
-    let resolveCapture: () => void; // Replace any with a specific function type
+    let resolveCapture: (response?: any) => void;
     (captureService.captureService.createCapture as any) = vi.fn(() => 
       new Promise(resolve => { resolveCapture = resolve; })
     );

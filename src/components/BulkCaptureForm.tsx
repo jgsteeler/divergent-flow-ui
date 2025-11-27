@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
 import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 
 interface BulkCaptureFormProps {
@@ -44,7 +43,12 @@ export default function BulkCaptureForm({ theme, onCapturesCreated }: BulkCaptur
     setFeedback(null);
 
     try {
-      const userId = (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        setFeedback({ type: 'error', message: 'User ID is missing. Please log in again.' });
+        setIsSubmitting(false);
+        return;
+      }
       const token = user.access_token;
       
       // Create all captures in parallel

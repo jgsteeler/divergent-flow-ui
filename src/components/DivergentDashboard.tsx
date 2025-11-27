@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
 import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
 import type { Theme } from '../theme';
 import type { UiMode, NeuroMode } from '../utils/preferences';
 import HamburgerMenu from './HamburgerMenu';
@@ -10,7 +9,6 @@ import HamburgerMenu from './HamburgerMenu';
 interface DivergentDashboardProps {
   theme: Theme;
   uiVersion: string;
-  apiVersion: string;
   mode: UiMode;
   neuroMode: NeuroMode;
   onModeToggle: () => void;
@@ -20,7 +18,6 @@ interface DivergentDashboardProps {
 export default function DivergentDashboard({
   theme,
   uiVersion,
-  apiVersion,
   mode,
   neuroMode,
   onModeToggle,
@@ -48,7 +45,12 @@ export default function DivergentDashboard({
     setFeedback(null);
 
     try {
-      const userId = (user.profile as UserProfile)?.sub as string;
+      const userId = sessionStorage.getItem('df_user_id');
+      if (!userId) {
+        setFeedback({ type: 'error', message: 'User ID missing. Please log in again.' });
+        setIsSubmitting(false);
+        return;
+      }
       const token = user.access_token;
       await captureService.createCapture({
         userId,
@@ -90,7 +92,6 @@ export default function DivergentDashboard({
       <HamburgerMenu
         theme={theme}
         uiVersion={uiVersion}
-        apiVersion={apiVersion}
         mode={mode}
         neuroMode={neuroMode}
         onModeToggle={onModeToggle}

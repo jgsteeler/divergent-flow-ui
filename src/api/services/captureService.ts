@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 export const captureService = {
   createCapture: async (request: CreateCaptureRequest, token: string): Promise<Capture> => {
-    return apiClient('/v1/capture', CaptureSchema, {
+    return apiClient('/api/capture', CaptureSchema, {
       method: 'POST',
       body: JSON.stringify(request),
       headers: {
@@ -14,8 +14,14 @@ export const captureService = {
     });
   },
 
-  listCapturesByUser: async (userId: string, token: string): Promise<Capture[]> => {
-    return apiClient(`/v1/capture/user/${userId}`, CaptureListSchema, {
+  listCapturesByUser: async (userId: string, token: string, migrated?: boolean): Promise<Capture[]> => {
+    const params = new URLSearchParams();
+    if (migrated !== undefined) {
+      params.append('migrated', String(migrated));
+    }
+    const queryString = params.toString();
+    const url = `/api/capture/user/${userId}${queryString ? `?${queryString}` : ''}`;
+    return apiClient(url, CaptureListSchema, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -29,7 +35,7 @@ export const captureService = {
       params.append('migrated', String(migrated));
     }
     const queryString = params.toString();
-    const url = `/v1/capture/user/email/${encodeURIComponent(email)}${queryString ? `?${queryString}` : ''}`;
+    const url = `/api/capture/user/email/${encodeURIComponent(email)}${queryString ? `?${queryString}` : ''}`;
     return apiClient(url, CaptureListSchema, {
       method: 'GET',
       headers: {
@@ -39,7 +45,7 @@ export const captureService = {
   },
 
   updateCapture: async (request: UpdateCaptureRequest, token: string): Promise<Capture> => {
-    return apiClient(`/v1/capture/${request.id}`, CaptureSchema, {
+    return apiClient(`/api/capture/${request.id}`, CaptureSchema, {
       method: 'PUT',
       body: JSON.stringify(request),
       headers: {
@@ -50,7 +56,7 @@ export const captureService = {
 
   deleteCapture: async (id: string, token: string): Promise<void> => {
     // DELETE returns 204 No Content, so we use a simple schema
-    await apiClient(`/v1/capture/${id}`, z.unknown(), {
+    await apiClient(`/api/capture/${id}`, z.unknown(), {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`,
