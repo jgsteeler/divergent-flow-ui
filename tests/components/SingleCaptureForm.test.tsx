@@ -152,7 +152,7 @@ describe('SingleCaptureForm', () => {
 
   it('should disable form while submitting', async () => {
     const user = userEvent.setup();
-    let resolveCapture: () => void; // Replace any with a specific function type
+    let resolveCapture: (response?: any) => void;
     (captureService.captureService.createCapture as any) = vi.fn(() => 
       new Promise(resolve => { resolveCapture = resolve; })
     );
