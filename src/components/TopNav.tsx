@@ -48,6 +48,12 @@ export default function TopNav({
         zIndex: 100,
       }}
     >
+      {/* Logo */}
+      <img
+        src="/branding/divergent-flow-logo-variant.png"
+        alt="Divergent Flow Logo"
+        style={{ width: 40, height: 40, marginRight: 16, borderRadius: 8, background: theme.background, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+      />
       {/* Home Link */}
       <button
         onClick={() => onNavigate('home')}

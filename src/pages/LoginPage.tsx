@@ -61,6 +61,11 @@ export default function LoginPage({ theme }: LoginPageProps) {
           textAlign: 'center',
         }}
       >
+        <img
+          src="/branding/divergent-flow-logo-variant.png"
+          alt="Divergent Flow Logo"
+          style={{ width: 64, height: 64, marginBottom: 24, borderRadius: 12, background: theme.background, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+        />
         <h1 style={{ margin: '0 0 1rem', fontSize: 36 }}>Welcome to Divergent Flow</h1>
         <p style={{ fontSize: 16, lineHeight: 1.6, margin: '1.5rem 0', opacity: 0.9 }}>
           Sign in to access your captures and productivity tools designed for neurodivergent minds.
