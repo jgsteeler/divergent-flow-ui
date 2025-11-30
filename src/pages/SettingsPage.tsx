@@ -11,9 +11,7 @@ interface SettingsPageProps {
 
 export default function SettingsPage({
   theme,
-  mode,
   neuroMode,
-  onModeToggle,
   onNeuroModeToggle,
 }: SettingsPageProps) {
   return (
