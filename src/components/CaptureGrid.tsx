@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { captureService } from '../api/services/captureService';
-import { useAuth } from '../context/useAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 import type { Theme } from '../theme';
 import type { Capture } from '../api/schemas/captureSchema';
 
@@ -15,10 +15,10 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
-  const { user } = useAuth();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
-  const loadCaptures = async () => {
-    if (!user || !user.access_token) {
+  const loadCaptures = useCallback(async () => {
+    if (!isAuthenticated || !user) {
       setError('You must be logged in to view captures');
       setLoading(false);
       return;
@@ -27,26 +27,24 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
     try {
       setLoading(true);
       setError(null);
-      const userId = sessionStorage.getItem('df_user_id');
+      const userId = user.sub;
       if (!userId) {
         setError('User ID is missing. Please log in again.');
         setLoading(false);
         return;
       }
-      const token = user.access_token;
+      const token = await getAccessTokenSilently();
       const allCaptures = await captureService.listCapturesByUser(userId, token, false);
       setCaptures(allCaptures);
     } catch (err) {
-      console.error('Failed to load captures:', err);
       setError(err instanceof Error ? err.message : 'Failed to load captures');
-    } finally {
       setLoading(false);
     }
-  };
+  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   useEffect(() => {
     loadCaptures();
-  }, [refreshTrigger]);
+  }, [refreshTrigger, loadCaptures]);
 
   const handleEditStart = (capture: Capture) => {
     setEditingId(capture.id);
@@ -70,7 +68,7 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
     }
 
     try {
-      const token = user.access_token;
+      const token = await getAccessTokenSilently();
       await captureService.updateCapture({
         id: capture.id,
         userId: capture.userId,
@@ -101,7 +99,7 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
     }
 
     try {
-      const token = user.access_token;
+      const token = await getAccessTokenSilently();
       await captureService.deleteCapture(id, token);
       setCaptures(captures.filter(c => c.id !== id));
     } catch (err) {

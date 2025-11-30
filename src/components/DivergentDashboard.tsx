@@ -1,32 +1,28 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
-import { useAuth } from '../context/useAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 import type { Theme } from '../theme';
-import type { UiMode, NeuroMode } from '../utils/preferences';
+import type { NeuroMode } from '../utils/preferences';
 import HamburgerMenu from './HamburgerMenu';
 
 interface DivergentDashboardProps {
   theme: Theme;
   uiVersion: string;
-  mode: UiMode;
   neuroMode: NeuroMode;
-  onModeToggle: () => void;
   onNeuroModeToggle: () => void;
 }
 
 export default function DivergentDashboard({
   theme,
   uiVersion,
-  mode,
   neuroMode,
-  onModeToggle,
   onNeuroModeToggle,
 }: DivergentDashboardProps) {
   const [captureText, setCaptureText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const { user } = useAuth();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -36,7 +32,7 @@ export default function DivergentDashboard({
       return;
     }
 
-    if (!user || !user.access_token) {
+    if (!isAuthenticated || !user) {
       setFeedback({ type: 'error', message: 'You must be logged in to capture' });
       return;
     }
@@ -45,19 +41,19 @@ export default function DivergentDashboard({
     setFeedback(null);
 
     try {
-      const userId = sessionStorage.getItem('df_user_id');
+      const userId = user.sub;
       if (!userId) {
         setFeedback({ type: 'error', message: 'User ID missing. Please log in again.' });
         setIsSubmitting(false);
         return;
       }
-      const token = user.access_token;
+      const token = await getAccessTokenSilently();
       await captureService.createCapture({
         userId,
         rawText: captureText.trim(),
       }, token);
       
-      setFeedback({ type: 'success', message: '✓ Captured!' });
+      setFeedback({ type: 'success', message: '\u2713 Captured!' });
       setCaptureText('');
       
       // Clear success message after 2 seconds
@@ -92,9 +88,7 @@ export default function DivergentDashboard({
       <HamburgerMenu
         theme={theme}
         uiVersion={uiVersion}
-        mode={mode}
         neuroMode={neuroMode}
-        onModeToggle={onModeToggle}
         onNeuroModeToggle={onNeuroModeToggle}
       />
 

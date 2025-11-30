@@ -1,5 +1,6 @@
+// Divergent Flow Auth0 Login Page
 import { useEffect } from 'react';
-import { useAuth } from '../context/useAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 import type { Theme } from '../theme';
 
 interface LoginPageProps {
@@ -7,15 +8,13 @@ interface LoginPageProps {
 }
 
 export default function LoginPage({ theme }: LoginPageProps) {
-  const { user, login, isLoading } = useAuth();
+  const { loginWithRedirect, isLoading, isAuthenticated } = useAuth0();
 
-  // If already logged in, this page shouldn't be shown
-  // (handled by parent component routing logic)
   useEffect(() => {
-    if (user) {
-      console.log('User already logged in, redirect should happen');
+    if (isAuthenticated) {
+      // Optionally redirect or show a message
     }
-  }, [user]);
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -62,7 +61,7 @@ export default function LoginPage({ theme }: LoginPageProps) {
         }}
       >
         <img
-          src="/branding/divergent-flow-logo-variant.png"
+          src="/branding/divergent-flow-logo.png"
           alt="Divergent Flow Logo"
           style={{ width: 64, height: 64, marginBottom: 24, borderRadius: 12, background: theme.background, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
         />
@@ -73,7 +72,7 @@ export default function LoginPage({ theme }: LoginPageProps) {
 
         <div style={{ marginTop: '2rem' }}>
           <button
-            onClick={login}
+            onClick={() => loginWithRedirect()}
             style={{
               padding: '16px 48px',
               background: theme.accent,
@@ -85,14 +84,6 @@ export default function LoginPage({ theme }: LoginPageProps) {
               fontWeight: 600,
               boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
               transition: 'transform 0.2s, box-shadow 0.2s',
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
             }}
           >
             Login / Sign Up

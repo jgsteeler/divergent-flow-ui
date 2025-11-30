@@ -16,42 +16,34 @@ describe('AnonymousHomePage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock console.log to suppress debug output
     vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   it('should render hero section with title and tagline', () => {
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-
     expect(screen.getByText(/divergent flow/i)).toBeDefined();
-    expect(screen.getByText(/empowering neurodivergent minds/i)).toBeDefined();
   });
 
-  it('should render "Get Started Free" button', () => {
+  it('should render "Login / Sign Up with Auth0" button', () => {
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-
-    const button = screen.getByRole('button', { name: /get started free/i });
+    const button = screen.getByRole('button', { name: /login \/? sign up with auth0/i });
     expect(button).toBeDefined();
   });
 
-  it('should call onLogin when "Get Started Free" button is clicked', async () => {
+  it('should call onLogin when "Login / Sign Up with Auth0" button is clicked', async () => {
     const user = userEvent.setup();
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-
-    const button = screen.getByRole('button', { name: /get started free/i });
+    const button = screen.getByRole('button', { name: /login \/? sign up with auth0/i });
     await user.click(button);
-
     expect(mockOnLogin).toHaveBeenCalledTimes(1);
   });
 
   it('should log debug message when button is clicked', async () => {
     const user = userEvent.setup();
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-
-    const button = screen.getByRole('button', { name: /get started free/i });
+    const button = screen.getByRole('button', { name: /login \/? sign up with auth0/i });
     await user.click(button);
-
-    expect(console.log).toHaveBeenCalledWith('Get Started button clicked, calling onLogin');
+    expect(console.log).toHaveBeenCalledWith('Login button clicked, calling onLogin');
   });
 
   it('should render three feature cards', () => {

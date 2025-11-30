@@ -1,11 +1,20 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import SingleCaptureForm from '../../src/components/SingleCaptureForm';
 import * as captureService from '../../src/api/services/captureService';
 import * as userService from '../../src/api/services/userService';
 import { lightTheme } from '../../src/theme';
-import * as useAuthModule from '../../src/context/useAuth';
+vi.mock('@auth0/auth0-react', () => ({
+  useAuth0: () => ({
+    isAuthenticated: true,
+    user: { sub: 'user-123' },
+    getAccessTokenSilently: vi.fn().mockResolvedValue('token'),
+    loginWithRedirect: vi.fn(),
+    logout: vi.fn(),
+  }),
+}));
 
 // Mock the services
 vi.mock('../../src/api/services/captureService');
@@ -17,21 +26,10 @@ describe('SingleCaptureForm', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (userService.userService.getUserIdByEmail as any).mockResolvedValue('user-123');
-    
+    userService.userService.getUserIdByEmail = vi.fn().mockResolvedValue('user-123');
     // Mock sessionStorage with df_user_id
     sessionStorage.setItem('df_user_id', 'user-123');
-    
-    // Mock useAuth to return authenticated user
-    vi.spyOn(useAuthModule, 'useAuth').mockReturnValue({
-      user: {
-        access_token: 'mock-token',
-        profile: { sub: 'user-123' },
-      } as any,
-      isLoading: false,
-      login: vi.fn(),
-      logout: vi.fn(),
-    });
+    // Auth0 context is mocked globally above
   });
 
   it('should render the form with title and textarea', () => {
@@ -92,7 +90,7 @@ describe('SingleCaptureForm', () => {
 
   it('should submit capture successfully', async () => {
     const user = userEvent.setup();
-    (captureService.captureService.createCapture as any) = vi.fn().mockResolvedValue({
+    captureService.captureService.createCapture = vi.fn().mockResolvedValue({
       id: 'capture-123',
       userId: 'user-123',
       rawText: 'Test capture',
@@ -115,11 +113,11 @@ describe('SingleCaptureForm', () => {
       expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
         userId: 'user-123',
         rawText: 'Test capture',
-      }, 'mock-token');
+        }, 'token');
     });
 
     await waitFor(() => {
-      expect(screen.getByText('✓ Captured successfully!')).toBeInTheDocument();
+      expect(screen.getByText('✓ Captured!')).toBeInTheDocument();
     });
 
     expect(mockOnCaptureCreated).toHaveBeenCalledTimes(1);
@@ -128,7 +126,7 @@ describe('SingleCaptureForm', () => {
 
   it('should show error message on failed submission', async () => {
     const user = userEvent.setup();
-    (captureService.captureService.createCapture as any) = vi.fn().mockRejectedValue(
+    captureService.captureService.createCapture = vi.fn().mockRejectedValue(
       new Error('Network error')
     );
 
@@ -152,9 +150,9 @@ describe('SingleCaptureForm', () => {
 
   it('should disable form while submitting', async () => {
     const user = userEvent.setup();
-    let resolveCapture: (response?: any) => void;
-    (captureService.captureService.createCapture as any) = vi.fn(() => 
-      new Promise(resolve => { resolveCapture = resolve; })
+    let resolveCapture: ((response?: { id: string; userId: string; rawText: string; createdAt: string; updatedAt: string; migrated: boolean }) => void) | undefined;
+    captureService.captureService.createCapture = vi.fn(() =>
+      new Promise<{ id: string; userId: string; rawText: string; createdAt: string; updatedAt: string; migrated: boolean }>(resolve => { resolveCapture = resolve; })
     );
 
     render(
@@ -173,18 +171,20 @@ describe('SingleCaptureForm', () => {
     });
 
     // Resolve the promise
-    resolveCapture({
-      id: 'capture-123',
-      userId: 'user-123',
-      rawText: 'Test capture',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      migrated: false,
-    });
+    if (resolveCapture) {
+      resolveCapture({
+        id: 'capture-123',
+        userId: 'user-123',
+        rawText: 'Test capture',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        migrated: false,
+      });
+    }
 
     // Wait for success state and check textarea is cleared
     await waitFor(() => {
-      expect(screen.getByText('✓ Captured successfully!')).toBeInTheDocument();
+      expect(screen.getByText('✓ Captured!')).toBeInTheDocument();
     });
     
     // Button should be disabled again because textarea is now empty
@@ -193,7 +193,7 @@ describe('SingleCaptureForm', () => {
 
   it('should trim whitespace from capture text', async () => {
     const user = userEvent.setup();
-    (captureService.captureService.createCapture as any) = vi.fn().mockResolvedValue({
+    captureService.captureService.createCapture = vi.fn().mockResolvedValue({
       id: 'capture-123',
       userId: 'user-123',
       rawText: 'Test capture',
@@ -216,7 +216,7 @@ describe('SingleCaptureForm', () => {
       expect(captureService.captureService.createCapture).toHaveBeenCalledWith({
         userId: 'user-123',
         rawText: 'Test capture',
-      }, 'mock-token');
+      }, 'token');
     });
   });
 });
