@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { GSC_LIGHT, GSC_DARK } from '../theme';
+import { GSC_LIGHT } from '../theme';
 import { ThemeContext } from './ThemeContextInstance';
 
 type ThemeMode = 'light' | 'dark';
@@ -10,7 +10,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   // Inject CSS variables for the current theme
   useEffect(() => {
-    const theme = mode === 'dark' ? GSC_DARK : GSC_LIGHT;
+    const theme = GSC_LIGHT;
     const root = document.documentElement;
     Object.entries(theme).forEach(([key, value]) => {
       root.style.setProperty(`--${key}`, value);

@@ -1,22 +1,18 @@
 import { useState } from 'react';
-import type { UiMode, NeuroMode } from '../utils/preferences';
+import type { NeuroMode } from '../utils/preferences';
 import type { Theme } from '../theme';
 
 interface HamburgerMenuProps {
   theme: Theme;
   uiVersion: string;
-  mode: UiMode;
   neuroMode: NeuroMode;
-  onModeToggle: () => void;
   onNeuroModeToggle: () => void;
 }
 
 export default function HamburgerMenu({
   theme,
   uiVersion,
-  mode,
   neuroMode,
-  onModeToggle,
   onNeuroModeToggle,
 }: HamburgerMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,35 +115,8 @@ export default function HamburgerMenu({
               </div>
             </div>
 
-            {/* Toggle Switches */}
+            {/* Neuro Mode Toggle Only */}
             <div style={{ marginBottom: 24 }}>
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  marginBottom: 16,
-                  fontSize: 16,
-                }}
-              >
-                <span>Light / Dark Mode</span>
-                <button
-                  onClick={onModeToggle}
-                  style={{
-                    background: theme.accent,
-                    color: theme.background,
-                    border: 'none',
-                    borderRadius: 6,
-                    padding: '8px 16px',
-                    cursor: 'pointer',
-                    fontSize: 14,
-                    fontWeight: 600,
-                  }}
-                >
-                  {mode === 'light' ? '☀️ Light' : '🌙 Dark'}
-                </button>
-              </label>
-
               <label
                 style={{
                   display: 'flex',

@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/useAuth';
-import type { UserProfile } from 'oidc-client-ts';
+import { useAuth0 } from '@auth0/auth0-react';
 import type { Theme } from '../theme';
 
 interface TopNavProps {
@@ -17,7 +16,7 @@ export default function TopNav({
   onNavigate,
 }: TopNavProps) {
   const [aboutOpen, setAboutOpen] = useState(false);
-  const { user, login, logout } = useAuth();
+  const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
 
   const navLinkStyle = (page: string) => ({
     padding: '12px 20px',
@@ -48,6 +47,12 @@ export default function TopNav({
         zIndex: 100,
       }}
     >
+      {/* Logo (SVG, transparent background) */}
+      <img
+        src="/branding/divergent-flow-logo.png"
+        alt="Divergent Flow Logo"
+        style={{ width: 40, height: 40, marginRight: 16, borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+      />
       {/* Home Link */}
       <button
         onClick={() => onNavigate('home')}
@@ -57,7 +62,7 @@ export default function TopNav({
       </button>
 
       {/* Capture Link - Only show for authenticated users */}
-      {user && (
+      {isAuthenticated && (
         <button
           onClick={() => onNavigate('capture')}
           style={navLinkStyle('capture')}
@@ -67,7 +72,7 @@ export default function TopNav({
       )}
 
       {/* Settings Link - Only show for authenticated users */}
-      {user && (
+      {isAuthenticated && (
         <button
           onClick={() => onNavigate('settings')}
           style={navLinkStyle('settings')}
@@ -158,13 +163,13 @@ export default function TopNav({
 
       {/* Auth Buttons */}
       <div style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
-        {user ? (
+        {isAuthenticated && user ? (
           <>
             <span style={{ color: theme.background, fontSize: '14px', alignSelf: 'center' }}>
-              Welcome, {(user.profile as UserProfile)?.name || (user.profile as UserProfile)?.email || user.profile?.sub}
+              Welcome, {user.name || user.email}
             </span>
             <button
-              onClick={logout}
+              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
               style={{
                 padding: '8px 16px',
                 background: theme.accent,
@@ -180,7 +185,7 @@ export default function TopNav({
           </>
         ) : (
           <button
-            onClick={login}
+            onClick={() => loginWithRedirect()}
             style={{
               padding: '8px 16px',
               background: theme.accent,

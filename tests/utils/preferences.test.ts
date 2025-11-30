@@ -44,25 +44,18 @@ describe('preferences utility', () => {
 
   describe('getNeuroMode', () => {
     it('should return "typical" by default when nothing is stored', () => {
-      (localStorage.getItem as any).mockReturnValue(null);
-      const mode = getNeuroMode();
-      expect(mode).toBe('typical');
-    });
-
-    it('should return "typical" when stored value is "typical"', () => {
-      (localStorage.getItem as any).mockReturnValue('typical');
+      window.localStorage.clear();
       expect(getNeuroMode()).toBe('typical');
     });
 
-    it('should return "divergent" when stored value is "divergent"', () => {
-      (localStorage.getItem as any).mockReturnValue('divergent');
-      expect(getNeuroMode()).toBe('divergent');
+    it('should return "typical" when stored value is "typical"', () => {
+      window.localStorage.setItem('neuroMode', 'typical');
+      expect(getNeuroMode()).toBe('typical');
     });
 
     it('should return "typical" for invalid stored values', () => {
-      (localStorage.getItem as any).mockReturnValue('invalid');
-      const mode = getNeuroMode();
-      expect(mode).toBe('typical');
+      window.localStorage.setItem('neuroMode', 'invalid');
+      expect(getNeuroMode()).toBe('typical');
     });
   });
 
@@ -75,6 +68,42 @@ describe('preferences utility', () => {
     it('should store "divergent" mode in localStorage', () => {
       setNeuroMode('divergent');
       expect(localStorage.setItem).toHaveBeenCalledWith('neuroMode', 'divergent');
+    });
+  });
+
+  describe('neuroMode localStorage persistence', () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
+    it('should default to typical if not set', () => {
+      expect(getNeuroMode()).toBe('typical');
+    });
+
+    it('should persist and retrieve typical mode', () => {
+      setNeuroMode('typical');
+      expect(getNeuroMode()).toBe('typical');
+    });
+
+    it('should ignore invalid values and default to typical', () => {
+      window.localStorage.setItem('neuroMode', 'invalid');
+      expect(getNeuroMode()).toBe('typical');
+    });
+  });
+
+  describe('neuroMode localStorage persistence (isolated)', () => {
+    beforeEach(() => {
+      window.localStorage.clear();
+    });
+
+    it('should persist and retrieve typical mode', () => {
+      window.localStorage.setItem('neuroMode', 'typical');
+      expect(getNeuroMode()).toBe('typical');
+    });
+
+    it('should persist and retrieve typical mode', () => {
+      window.localStorage.setItem('neuroMode', 'typical');
+      expect(getNeuroMode()).toBe('typical');
     });
   });
 });

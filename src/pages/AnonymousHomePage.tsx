@@ -43,7 +43,7 @@ export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageP
 
         <button
           onClick={() => {
-            console.log('Get Started button clicked, calling onLogin');
+            console.log('Login button clicked, calling onLogin');
             onLogin();
           }}
           style={{
@@ -54,8 +54,8 @@ export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageP
             border: 'none',
             borderRadius: '8px',
             cursor: 'pointer',
-            fontSize: '20px',
-            fontWeight: 600,
+            fontSize: '22px',
+            fontWeight: 700,
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             transition: 'transform 0.2s, box-shadow 0.2s',
           }}
@@ -68,7 +68,7 @@ export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageP
             e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
           }}
         >
-          Get Started Free
+          Login / Sign Up with Auth0
         </button>
       </div>
 

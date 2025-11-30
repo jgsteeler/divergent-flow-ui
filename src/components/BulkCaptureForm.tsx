@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { captureService } from '../api/services/captureService';
-import { useAuth } from '../context/useAuth';
+import { useAuth0 } from '@auth0/auth0-react';
 import type { Theme } from '../theme';
 
 interface BulkCaptureFormProps {
@@ -13,7 +13,7 @@ export default function BulkCaptureForm({ theme, onCapturesCreated }: BulkCaptur
   const [captureText, setCaptureText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-  const { user } = useAuth();
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export default function BulkCaptureForm({ theme, onCapturesCreated }: BulkCaptur
       return;
     }
 
-    if (!user || !user.access_token) {
+    if (!isAuthenticated || !user) {
       setFeedback({ type: 'error', message: 'You must be logged in to capture' });
       return;
     }
@@ -43,43 +43,24 @@ export default function BulkCaptureForm({ theme, onCapturesCreated }: BulkCaptur
     setFeedback(null);
 
     try {
-      const userId = sessionStorage.getItem('df_user_id');
+      const userId = user.sub;
       if (!userId) {
-        setFeedback({ type: 'error', message: 'User ID is missing. Please log in again.' });
+        setFeedback({ type: 'error', message: 'User ID missing. Please log in again.' });
         setIsSubmitting(false);
         return;
       }
-      const token = user.access_token;
-      
-      // Create all captures in parallel
+      const token = await getAccessTokenSilently();
       await Promise.all(
-        lines.map(line => 
-          captureService.createCapture({
-            userId,
-            rawText: line,
-          }, token)
+        lines.map(line =>
+          captureService.createCapture({ userId, rawText: line }, token)
         )
       );
-      
-      setFeedback({ 
-        type: 'success', 
-        message: `✓ Successfully captured ${lines.length} item${lines.length > 1 ? 's' : ''}!` 
-      });
+      setFeedback({ type: 'success', message: `\u2713 ${lines.length} captured!` });
       setCaptureText('');
-      
-      // Notify parent component
-      if (onCapturesCreated) {
-        onCapturesCreated();
-      }
-      
-      // Clear success message after 3 seconds
-      setTimeout(() => setFeedback(null), 3000);
+      if (onCapturesCreated) onCapturesCreated();
+      setTimeout(() => setFeedback(null), 2000);
     } catch (error) {
-      console.error('Bulk capture error:', error);
-      setFeedback({ 
-        type: 'error', 
-        message: error instanceof Error ? error.message : 'Failed to capture items' 
-      });
+      setFeedback({ type: 'error', message: error instanceof Error ? error.message : 'Failed to capture' });
     } finally {
       setIsSubmitting(false);
     }
