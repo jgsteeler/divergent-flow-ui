@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getTheme } from './theme';
-import { getUiMode, setUiMode, getNeuroMode, setNeuroMode } from './utils/preferences';
-import type { UiMode, NeuroMode } from './utils/preferences';
+import { getNeuroMode, setNeuroMode } from './utils/preferences';
+import type { NeuroMode } from './utils/preferences';
 import { getConfig } from './config';
 import { useAuth0 } from '@auth0/auth0-react';
 import DivergentDashboard from './components/DivergentDashboard';
@@ -18,7 +18,6 @@ function useUiVersion() {
 
 export default function LandingPage() {
   const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
-  const [mode, setModeState] = useState<UiMode>(getUiMode());
   const [neuroMode, setNeuroModeState] = useState<NeuroMode>(getNeuroMode());
   const [currentPage, setCurrentPage] = useState<string>('home');
   const theme = getTheme();
@@ -29,18 +28,16 @@ export default function LandingPage() {
     document.body.style.background = theme.background;
   }, [theme.background]);
 
-  // Persist mode changes
-  useEffect(() => {
-    setUiMode(mode);
-  }, [mode]);
-
+  // Persist neuro mode changes
   useEffect(() => {
     setNeuroMode(neuroMode);
   }, [neuroMode]);
 
-  // Toggle functions
-  const toggleMode = () => setModeState(mode === 'light' ? 'dark' : 'light');
-  const toggleNeuroMode = () => setNeuroModeState(neuroMode === 'typical' ? 'divergent' : 'typical');
+  // Toggle neuro mode only
+  const toggleNeuroMode = () => {
+    const newMode = neuroMode === 'typical' ? 'divergent' : 'typical';
+    setNeuroModeState(newMode);
+  };
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -69,6 +66,18 @@ export default function LandingPage() {
   }
 
   // Authenticated: show main dashboard
+  if (neuroMode === 'divergent') {
+    // Only show DivergentDashboard and HamburgerMenu (HamburgerMenu is inside DivergentDashboard)
+    return (
+      <DivergentDashboard
+        theme={theme}
+        uiVersion={uiVersion}
+        neuroMode={neuroMode}
+        onNeuroModeToggle={toggleNeuroMode}
+      />
+    );
+  }
+  // Typical mode: show full UI
   return (
     <div
       style={{
@@ -89,11 +98,10 @@ export default function LandingPage() {
       {currentPage === 'settings' && (
         <SettingsPage
           theme={theme}
-          mode={mode}
           neuroMode={neuroMode}
-          onModeToggle={toggleMode}
-          onNeuroModeToggle={toggleNeuroMode}
-        />
+          onNeuroModeToggle={toggleNeuroMode} mode={'light'} onModeToggle={function (): void {
+            throw new Error('Function not implemented.');
+          } }        />
       )}
       {currentPage === 'capture' && <CapturePage theme={theme} />}
       {currentPage === 'home' && (

@@ -26,68 +26,7 @@ export default function SettingsPage({
     >
       <h1 style={{ color: theme.primary, marginBottom: '32px' }}>Settings</h1>
 
-      {/* Appearance Section */}
-      <section
-        style={{
-          background: theme.background,
-          border: `1px solid ${theme.secondary}`,
-          borderRadius: '12px',
-          padding: '24px',
-          marginBottom: '24px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-        }}
-      >
-        <h2
-          style={{
-            color: theme.primary,
-            fontSize: '20px',
-            marginTop: 0,
-            marginBottom: '20px',
-          }}
-        >
-          Appearance
-        </h2>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '16px 0',
-            borderBottom: `1px solid ${theme.secondary}`,
-          }}
-        >
-          <div>
-            <div style={{ fontWeight: 600, marginBottom: '4px' }}>
-              Theme Mode
-            </div>
-            <div style={{ fontSize: '14px', color: theme.secondary }}>
-              Switch between light and dark themes
-            </div>
-          </div>
-          <button
-            onClick={onModeToggle}
-            style={{
-              background: theme.accent,
-              color: theme.background,
-              border: 'none',
-              borderRadius: '8px',
-              padding: '12px 24px',
-              cursor: 'pointer',
-              fontSize: '16px',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              transition: 'opacity 0.2s',
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-          >
-            {mode === 'light' ? '☀️ Light Mode' : '🌙 Dark Mode'}
-          </button>
-        </div>
-      </section>
+      {/* Only neuro mode toggle remains; appearance section removed */}
 
       {/* Interface Section */}
       <section
