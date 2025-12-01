@@ -15,6 +15,8 @@
 # Staging environment (develop branch)
 [context.develop]
   [context.develop.environment]
+    VITE_AUTH0_DOMAIN = "dev-axm38gs1176ibx7p.us.auth0.com"
+    VITE_AUTH0_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
     VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
     VITE_OIDC_ISSUER_URL = "https://dev-axm38gs1176ibx7p.us.auth0.com"
     VITE_OIDC_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
@@ -25,6 +27,8 @@
 # Production environment (main branch)
 [context.production]
   [context.production.environment]
+    VITE_AUTH0_DOMAIN = "dev-axm38gs1176ibx7p.us.auth0.com"
+    VITE_AUTH0_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
     VITE_API_URL = "https://divergent-flow-gateway.gscdev.workers.dev"
     VITE_OIDC_ISSUER_URL = "https://dev-axm38gs1176ibx7p.us.auth0.com"
     VITE_OIDC_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
@@ -35,6 +39,8 @@
 # Deploy previews from PRs (uses staging environment)
 [context.deploy-preview]
   [context.deploy-preview.environment]
+    VITE_AUTH0_DOMAIN = "dev-axm38gs1176ibx7p.us.auth0.com"
+    VITE_AUTH0_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
     VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
     VITE_OIDC_ISSUER_URL = "https://dev-axm38gs1176ibx7p.us.auth0.com"
     VITE_OIDC_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
