@@ -7,6 +7,11 @@ interface AnonymousHomePageProps {
 }
 
 export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageProps) {
+  const handleLoginClick = () => {
+    console.log('Login button clicked, calling onLogin');
+    onLogin();
+  };
+
   return (
     <div className="anonymous-home-container">
       {/* Hero Section */}
@@ -21,7 +26,7 @@ export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageP
         </p>
         <button
           className="anonymous-login-btn"
-          onClick={onLogin}
+          onClick={handleLoginClick}
         >
           Log In
         </button>
