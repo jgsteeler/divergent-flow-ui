@@ -12,6 +12,7 @@ interface DivergentDashboardProps {
   uiVersion: string;
   neuroMode: NeuroMode;
   onNeuroModeToggle: () => void;
+  onLogout: () => void;
 }
 
 export default function DivergentDashboard({
@@ -19,6 +20,7 @@ export default function DivergentDashboard({
   uiVersion,
   neuroMode,
   onNeuroModeToggle,
+  onLogout,
 }: DivergentDashboardProps) {
   const [captureText, setCaptureText] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -108,6 +110,7 @@ export default function DivergentDashboard({
           uiVersion={uiVersion}
           neuroMode={neuroMode}
           onNeuroModeToggle={onNeuroModeToggle}
+          onLogout={onLogout}
         />
       )}
     </div>

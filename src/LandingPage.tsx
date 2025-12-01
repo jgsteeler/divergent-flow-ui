@@ -19,7 +19,7 @@ function useUiVersion() {
 
 export default function LandingPage() {
   const { isLoading, isAuthenticated, loginWithRedirect, logout } = useAuth0();
-  const [neuroMode, setNeuroModeState] = useState<NeuroMode>(getNeuroMode());
+  const [neuroMode, setNeuroModeState] = useState<NeuroMode>(() => getNeuroMode());
   const theme = getTheme();
   const uiVersion = useUiVersion();
   const [currentPage, setCurrentPage] = useState<string>('home');
@@ -74,6 +74,7 @@ export default function LandingPage() {
         uiVersion={uiVersion}
         neuroMode={neuroMode}
         onNeuroModeToggle={toggleNeuroMode}
+        onLogout={() => logout({ returnTo: window.location.origin } as any)}
       />
     );
   }
@@ -102,15 +103,16 @@ export default function LandingPage() {
         />
       )}
       {currentPage === 'capture' && <CapturePage theme={theme} />}
-      {currentPage === 'home' && neuroMode === 'typical' && (
+      {currentPage === 'home' && (neuroMode as NeuroMode) === 'typical' && (
         <TypicalDashboard onNavigate={setCurrentPage} onLogout={() => logout({ returnTo: window.location.origin } as any)} />
       )}
-      {currentPage === 'home' && neuroMode === 'divergent' && (
+      {currentPage === 'home' && (neuroMode as NeuroMode) === 'divergent' && (
         <DivergentDashboard
           theme={theme}
           uiVersion={uiVersion}
           neuroMode={neuroMode}
           onNeuroModeToggle={toggleNeuroMode}
+          onLogout={() => logout({ returnTo: window.location.origin } as any)}
         />
       )}
     </div>

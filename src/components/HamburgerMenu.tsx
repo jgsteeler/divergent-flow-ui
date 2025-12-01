@@ -8,6 +8,7 @@ interface HamburgerMenuProps {
   uiVersion: string;
   neuroMode: NeuroMode;
   onNeuroModeToggle: () => void;
+  onLogout?: () => void;
 }
 
 export default function HamburgerMenu({
@@ -15,6 +16,7 @@ export default function HamburgerMenu({
   uiVersion,
   neuroMode,
   onNeuroModeToggle,
+  onLogout,
 }: HamburgerMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,7 +42,7 @@ export default function HamburgerMenu({
         }}
         aria-label="Menu"
       >
-          <span className="hamburger-icon">&#9776;</span>
+        <span className="hamburger-icon">&#9776;</span>
       </button>
 
       {/* Menu Overlay */}
@@ -144,6 +146,28 @@ export default function HamburgerMenu({
                 </button>
               </label>
             </div>
+
+            {/* Logout Button */}
+            {onLogout && (
+              <button
+                style={{
+                  marginTop: '2rem',
+                  background: theme.accent,
+                  color: theme.background,
+                  border: 'none',
+                  borderRadius: 8,
+                  padding: '12px 24px',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                  transition: 'background 0.2s, color 0.2s',
+                }}
+                onClick={() => { setIsOpen(false); onLogout(); }}
+              >
+                Logout
+              </button>
+            )}
           </div>
         </>
       )}
