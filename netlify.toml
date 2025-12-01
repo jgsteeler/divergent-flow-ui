@@ -23,6 +23,7 @@
     VITE_OIDC_REDIRECT_URI = "https://divflow-staging.netlify.app/auth/callback"
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://divflow-staging.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
+    VITE_AUTH0_AUDIENCE = "https://divfloapistage"
 
 # Production environment (main branch)
 [context.production]
@@ -35,6 +36,7 @@
     VITE_OIDC_REDIRECT_URI = "https://divergentflow.netlify.app/auth/callback"
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://divergentflow.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
+    VITE_AUTH0_AUDIENCE = "https://divfloapi"
 
 # Deploy previews from PRs (uses staging environment)
 [context.deploy-preview]
@@ -47,6 +49,7 @@
     VITE_OIDC_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app/auth/callback"
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
+    VITE_AUTH0_AUDIENCE = "https://divfloapistage"
 
 # Version endpoint - serve config.json
 [[redirects]]
