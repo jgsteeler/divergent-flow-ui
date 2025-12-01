@@ -4,6 +4,8 @@
   margin: 0 auto;
   padding: 32px 16px;
   text-align: center;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 .typical-dashboard-title {
   font-size: 2.2rem;
@@ -41,7 +43,10 @@
 }
 @media (max-width: 600px) {
   .typical-dashboard-container {
-    padding: 16px 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   .typical-dashboard-title {
     font-size: 1.3rem;

@@ -142,7 +142,7 @@ export default function HamburgerMenu({
                     fontWeight: 600,
                   }}
                 >
-                  {neuroMode === 'divergent' ? '🌟 Divergent' : '📋 Typical'}
+                  {neuroMode === 'divergent' ? 'Switch to Typical Mode' : 'Switch to Divergent Mode'}
                 </button>
               </label>
             </div>

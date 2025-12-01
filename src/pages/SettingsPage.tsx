@@ -82,7 +82,7 @@ export default function SettingsPage({
             onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
           >
-            {neuroMode === 'divergent' ? '🌟 Divergent' : '📋 Typical'}
+            {neuroMode === 'divergent' ? 'Switch to Typical Mode' : 'Switch to Divergent Mode'}
           </button>
         </div>
       </section>
