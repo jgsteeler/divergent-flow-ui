@@ -1,3 +1,4 @@
+import './HamburgerMenu.css';
 import { useState } from 'react';
 import type { NeuroMode } from '../utils/preferences';
 import type { Theme } from '../theme';
@@ -39,7 +40,7 @@ export default function HamburgerMenu({
         }}
         aria-label="Menu"
       >
-        ☰
+          <span className="hamburger-icon">&#9776;</span>
       </button>
 
       {/* Menu Overlay */}

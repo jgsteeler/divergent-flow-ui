@@ -5,6 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import type { Theme } from '../theme';
 import type { NeuroMode } from '../utils/preferences';
 import HamburgerMenu from './HamburgerMenu';
+import './DashboardResponsive.css';
 
 interface DivergentDashboardProps {
   theme: Theme;
@@ -69,74 +70,46 @@ export default function DivergentDashboard({
     }
   };
 
-  if (neuroMode === 'divergent') {
-    return (
-      <div
-        style={{
-          minHeight: '100vh',
-          width: '100vw',
-          background: theme.background,
-          color: theme.text,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '20px',
-          boxSizing: 'border-box',
-          transition: 'background 0.3s, color 0.3s',
-        }}
-      >
+  return (
+    <div className="dashboard-container">
+      <h1 className="dashboard-title">Capture</h1>
+      <form className="dashboard-form" onSubmit={handleSubmit}>
+        <label htmlFor="capture-input" style={{ fontWeight: 500, marginBottom: '0.5rem' }}>
+          What's on your mind?
+        </label>
+        <textarea
+          id="capture-input"
+          className="dashboard-textarea"
+          value={captureText}
+          onChange={e => setCaptureText(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter' && e.metaKey) { handleSubmit(e); } }}
+          disabled={isSubmitting}
+          placeholder="Type anything... (Cmd+Enter to submit)"
+          style={{ width: '100%', minHeight: '150px', padding: '20px', fontSize: '1.125rem', borderRadius: '12px', border: `2px solid ${theme.primary}`, background: theme.background, color: theme.text, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box', marginBottom: '1.5rem', outline: 'none', transition: 'border-color 0.2s' }}
+          autoFocus
+        />
+        <button
+          type="submit"
+          className="dashboard-submit-btn"
+          disabled={isSubmitting || !captureText.trim()}
+          style={{ width: '100%', padding: '18px', fontSize: '1.25rem', fontWeight: 600, borderRadius: '12px', border: 'none', background: isSubmitting || !captureText.trim() ? theme.secondary : theme.accent, color: theme.background, cursor: isSubmitting || !captureText.trim() ? 'not-allowed' : 'pointer', opacity: isSubmitting || !captureText.trim() ? 0.6 : 1, transition: 'all 0.2s' }}
+        >
+          {isSubmitting ? 'Capturing...' : 'Capture'}
+        </button>
+        {feedback && (
+          <div className="dashboard-feedback" style={{ background: feedback.type === 'success' ? theme.primary : '#dc3545' }}>
+            {feedback.message}
+          </div>
+        )}
+      </form>
+      {neuroMode === 'divergent' && (
         <HamburgerMenu
           theme={theme}
           uiVersion={uiVersion}
           neuroMode={neuroMode}
           onNeuroModeToggle={onNeuroModeToggle}
         />
-        <div style={{ maxWidth: '600px', width: '100%' }}>
-          <h1 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: theme.primary, fontWeight: 600 }}>Capture</h1>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="capture-input" style={{ display: 'block', fontSize: '1.25rem', marginBottom: '1rem', color: theme.text, fontWeight: 500 }}>What's on your mind?</label>
-            <textarea
-              id="capture-input"
-              value={captureText}
-              onChange={(e) => setCaptureText(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter' && e.metaKey) { handleSubmit(e); } }}
-              disabled={isSubmitting}
-              placeholder="Type anything... (Cmd+Enter to submit)"
-              style={{ width: '100%', minHeight: '150px', padding: '20px', fontSize: '1.125rem', borderRadius: '12px', border: `2px solid ${theme.primary}`, background: theme.background, color: theme.text, fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box', marginBottom: '1.5rem', outline: 'none', transition: 'border-color 0.2s' }}
-              autoFocus
-            />
-            <button type="submit" disabled={isSubmitting || !captureText.trim()} style={{ width: '100%', padding: '18px', fontSize: '1.25rem', fontWeight: 600, borderRadius: '12px', border: 'none', background: isSubmitting || !captureText.trim() ? theme.secondary : theme.accent, color: theme.background, cursor: isSubmitting || !captureText.trim() ? 'not-allowed' : 'pointer', opacity: isSubmitting || !captureText.trim() ? 0.6 : 1, transition: 'all 0.2s' }}>{isSubmitting ? 'Capturing...' : 'Capture'}</button>
-          </form>
-          {feedback && (
-            <div style={{ marginTop: '1.5rem', padding: '16px', borderRadius: '8px', background: feedback.type === 'success' ? theme.primary : '#dc3545', color: theme.background, textAlign: 'center', fontSize: '1rem', fontWeight: 500 }}>{feedback.message}</div>
-          )}
-        </div>
-      </div>
-    );
-  }
-  // Typical mode
-  return (
-    <div
-      style={{
-        minHeight: '100vh',
-        width: '100vw',
-        background: theme.background,
-        color: theme.text,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-        boxSizing: 'border-box',
-        transition: 'background 0.3s, color 0.3s',
-      }}
-    >
-      {/* TopNav, Home, Capture, Settings, Logout would be rendered in parent or here if needed */}
-      <div style={{ maxWidth: '600px', width: '100%' }}>
-        <h1 style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem', color: theme.primary, fontWeight: 600 }}>Welcome to Typical Mode</h1>
-        <p style={{ textAlign: 'center', fontSize: '1.25rem', color: theme.secondary, marginBottom: '2rem' }}>This is a placeholder for the typical dashboard. Use the navigation above to access capture and settings.</p>
-      </div>
+      )}
     </div>
   );
 }
