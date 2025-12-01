@@ -16,8 +16,8 @@
 [context.develop]
   [context.develop.environment]
     VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
-    VITE_OIDC_ISSUER_URL = "https://divergent-flow-keycloak.fly.dev/realms/df-staging"
-    VITE_OIDC_CLIENT_ID = "web-app"
+    VITE_OIDC_ISSUER_URL = "https://dev-axm38gs1176ibx7p.us.auth0.com"
+    VITE_OIDC_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
     VITE_OIDC_REDIRECT_URI = "https://divflow-staging.netlify.app/auth/callback"
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://divflow-staging.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
@@ -26,8 +26,8 @@
 [context.production]
   [context.production.environment]
     VITE_API_URL = "https://divergent-flow-gateway.gscdev.workers.dev"
-    VITE_OIDC_ISSUER_URL = "https://auth.divergentflow.com/realms/df-prod"
-    VITE_OIDC_CLIENT_ID = "web-app"
+    VITE_OIDC_ISSUER_URL = "https://dev-axm38gs1176ibx7p.us.auth0.com"
+    VITE_OIDC_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
     VITE_OIDC_REDIRECT_URI = "https://divergentflow.netlify.app/auth/callback"
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://divergentflow.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
@@ -36,8 +36,8 @@
 [context.deploy-preview]
   [context.deploy-preview.environment]
     VITE_API_URL = "https://divergent-flow-gateway-staging.gscdev.workers.dev"
-    VITE_OIDC_ISSUER_URL = "https://divergent-flow-keycloak.fly.dev/realms/df-staging"
-    VITE_OIDC_CLIENT_ID = "web-app"
+    VITE_OIDC_ISSUER_URL = "https://dev-axm38gs1176ibx7p.us.auth0.com"
+    VITE_OIDC_CLIENT_ID = "8G8DuwRwqnGrXrpwzK2ofscrx2zked6O"
     VITE_OIDC_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app/auth/callback"
     VITE_OIDC_POST_LOGOUT_REDIRECT_URI = "https://deploy-preview-PLACEHOLDER.netlify.app"
     VITE_OIDC_SCOPES = "openid profile email"
