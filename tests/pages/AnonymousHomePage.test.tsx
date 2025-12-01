@@ -26,14 +26,14 @@ describe('AnonymousHomePage', () => {
 
   it('should render "Login / Sign Up with Auth0" button', () => {
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-    const button = screen.getByRole('button', { name: /login \/? sign up with auth0/i });
+    const button = screen.getByRole('button', { name: /log in/i });
     expect(button).toBeDefined();
   });
 
   it('should call onLogin when "Login / Sign Up with Auth0" button is clicked', async () => {
     const user = userEvent.setup();
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-    const button = screen.getByRole('button', { name: /login \/? sign up with auth0/i });
+    const button = screen.getByRole('button', { name: /log in/i });
     await user.click(button);
     expect(mockOnLogin).toHaveBeenCalledTimes(1);
   });
@@ -41,7 +41,7 @@ describe('AnonymousHomePage', () => {
   it('should log debug message when button is clicked', async () => {
     const user = userEvent.setup();
     render(<AnonymousHomePage theme={mockTheme} onLogin={mockOnLogin} />);
-    const button = screen.getByRole('button', { name: /login \/? sign up with auth0/i });
+    const button = screen.getByRole('button', { name: /log in/i });
     await user.click(button);
     expect(console.log).toHaveBeenCalledWith('Login button clicked, calling onLogin');
   });

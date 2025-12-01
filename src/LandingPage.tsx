@@ -9,6 +9,7 @@ import TopNav from './components/TopNav';
 import SettingsPage from './pages/SettingsPage';
 import CapturePage from './pages/CapturePage';
 import AnonymousHomePage from './pages/AnonymousHomePage';
+import TypicalDashboard from './components/TypicalDashboard';
 
 
 function useUiVersion() {
@@ -17,11 +18,11 @@ function useUiVersion() {
 }
 
 export default function LandingPage() {
-  const { isLoading, isAuthenticated, loginWithRedirect } = useAuth0();
-  const [neuroMode, setNeuroModeState] = useState<NeuroMode>(getNeuroMode());
-  const [currentPage, setCurrentPage] = useState<string>('home');
+  const { isLoading, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const [neuroMode, setNeuroModeState] = useState<NeuroMode>(() => getNeuroMode());
   const theme = getTheme();
   const uiVersion = useUiVersion();
+  const [currentPage, setCurrentPage] = useState<string>('home');
 
   // Set body background to match theme
   useEffect(() => {
@@ -67,17 +68,18 @@ export default function LandingPage() {
 
   // Authenticated: show main dashboard
   if (neuroMode === 'divergent') {
-    // Only show DivergentDashboard and HamburgerMenu (HamburgerMenu is inside DivergentDashboard)
     return (
       <DivergentDashboard
         theme={theme}
         uiVersion={uiVersion}
         neuroMode={neuroMode}
         onNeuroModeToggle={toggleNeuroMode}
+        onLogout={() => logout({ returnTo: window.location.origin } as any)}
       />
     );
   }
-  // Typical mode: show full UI
+
+  // Typical mode: show full UI with navigation
   return (
     <div
       style={{
@@ -89,27 +91,28 @@ export default function LandingPage() {
         transition: 'background 0.3s, color 0.3s',
       }}
     >
-      <TopNav
-        theme={theme}
-        uiVersion={uiVersion}
-        currentPage={currentPage}
-        onNavigate={setCurrentPage}
-      />
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      <TopNav isAuthenticated={isAuthenticated} currentPage={currentPage} onNavigate={setCurrentPage} onLogout={() => logout({ returnTo: window.location.origin } as any)} />
       {currentPage === 'settings' && (
         <SettingsPage
           theme={theme}
           neuroMode={neuroMode}
-          onNeuroModeToggle={toggleNeuroMode} mode={'light'} onModeToggle={function (): void {
-            throw new Error('Function not implemented.');
-          } }        />
+          onNeuroModeToggle={toggleNeuroMode}
+          mode={'light'}
+          onModeToggle={() => {}}
+        />
       )}
       {currentPage === 'capture' && <CapturePage theme={theme} />}
-      {currentPage === 'home' && (
+      {currentPage === 'home' && (neuroMode as NeuroMode) === 'typical' && (
+        <TypicalDashboard onNavigate={setCurrentPage} onLogout={() => logout({ returnTo: window.location.origin } as any)} />
+      )}
+      {currentPage === 'home' && (neuroMode as NeuroMode) === 'divergent' && (
         <DivergentDashboard
           theme={theme}
           uiVersion={uiVersion}
           neuroMode={neuroMode}
           onNeuroModeToggle={toggleNeuroMode}
+          onLogout={() => logout({ returnTo: window.location.origin } as any)}
         />
       )}
     </div>

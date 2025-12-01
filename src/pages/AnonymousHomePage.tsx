@@ -1,4 +1,5 @@
 import type { Theme } from '../theme';
+import './AnonymousHomePage.css';
 
 interface AnonymousHomePageProps {
   theme: Theme;
@@ -6,32 +7,15 @@ interface AnonymousHomePageProps {
 }
 
 export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageProps) {
+  const handleLoginClick = () => {
+    console.log('Login button clicked, calling onLogin');
+    onLogin();
+  };
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: 'calc(100vh - 60px)',
-        padding: 'max(2vw, 16px)',
-      }}
-    >
+    <div className="anonymous-home-container">
       {/* Hero Section */}
-      <div
-        style={{
-          background: theme.primary,
-          color: theme.background,
-          borderRadius: 20,
-          padding: 'clamp(1.5rem, 4vw, 3rem) clamp(1.5rem, 6vw, 4rem)',
-          boxShadow: '0 4px 32px rgba(0,0,0,0.10)',
-          maxWidth: '800px',
-          minWidth: 'min(320px, 100vw)',
-          width: '100%',
-          textAlign: 'center',
-          margin: '0 auto 3rem',
-        }}
-      >
+      <div className="anonymous-hero">
         <h1 style={{ margin: 0, fontSize: 48, letterSpacing: 1 }}>Divergent Flow</h1>
         <h2 style={{ margin: '0.5rem 0 1.5rem', fontWeight: 400, color: theme.accent, fontSize: 24 }}>
           Empowering Neurodivergent Minds to Flow
@@ -40,35 +24,11 @@ export default function AnonymousHomePage({ theme, onLogin }: AnonymousHomePageP
           A productivity system designed specifically for neurodivergent minds.
           Capture thoughts effortlessly, organize naturally, and achieve your goals your way.
         </p>
-
         <button
-          onClick={() => {
-            console.log('Login button clicked, calling onLogin');
-            onLogin();
-          }}
-          style={{
-            marginTop: '1.5rem',
-            padding: '16px 48px',
-            background: theme.accent,
-            color: theme.background,
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontSize: '22px',
-            fontWeight: 700,
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.2)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-          }}
+          className="anonymous-login-btn"
+          onClick={handleLoginClick}
         >
-          Login / Sign Up with Auth0
+          Log In
         </button>
       </div>
 
