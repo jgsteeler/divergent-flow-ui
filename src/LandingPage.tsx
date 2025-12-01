@@ -11,7 +11,6 @@ import CapturePage from './pages/CapturePage';
 import AnonymousHomePage from './pages/AnonymousHomePage';
 import TypicalDashboard from './components/TypicalDashboard';
 
-
 function useUiVersion() {
   // Use version from runtime config
   return getConfig().version || 'unknown';
@@ -67,6 +66,7 @@ export default function LandingPage() {
   }
 
   // Authenticated: show main dashboard
+  const postLogoutRedirect = import.meta.env.VITE_OIDC_POST_LOGOUT_REDIRECT_URI;
   if (neuroMode === 'divergent') {
     return (
       <DivergentDashboard
@@ -74,7 +74,7 @@ export default function LandingPage() {
         uiVersion={uiVersion}
         neuroMode={neuroMode}
         onNeuroModeToggle={toggleNeuroMode}
-        onLogout={() => logout({ returnTo: window.location.origin } as any)}
+        onLogout={() => logout({ logoutParams: { returnTo: postLogoutRedirect } })}
       />
     );
   }
@@ -91,8 +91,8 @@ export default function LandingPage() {
         transition: 'background 0.3s, color 0.3s',
       }}
     >
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      <TopNav isAuthenticated={isAuthenticated} currentPage={currentPage} onNavigate={setCurrentPage} onLogout={() => logout({ returnTo: window.location.origin } as any)} />
+      
+      <TopNav isAuthenticated={isAuthenticated} currentPage={currentPage} onNavigate={setCurrentPage} onLogout={() => logout({ logoutParams: { returnTo: postLogoutRedirect } })} />
       {currentPage === 'settings' && (
         <SettingsPage
           theme={theme}
@@ -104,7 +104,7 @@ export default function LandingPage() {
       )}
       {currentPage === 'capture' && <CapturePage theme={theme} />}
       {currentPage === 'home' && (neuroMode as NeuroMode) === 'typical' && (
-        <TypicalDashboard onNavigate={setCurrentPage} onLogout={() => logout({ returnTo: window.location.origin } as any)} />
+        <TypicalDashboard onNavigate={setCurrentPage} onLogout={() => logout({ logoutParams: { returnTo: postLogoutRedirect } })} />
       )}
       {currentPage === 'home' && (neuroMode as NeuroMode) === 'divergent' && (
         <DivergentDashboard
@@ -112,7 +112,7 @@ export default function LandingPage() {
           uiVersion={uiVersion}
           neuroMode={neuroMode}
           onNeuroModeToggle={toggleNeuroMode}
-          onLogout={() => logout({ returnTo: window.location.origin } as any)}
+          onLogout={() => logout({ logoutParams: { returnTo: postLogoutRedirect } })}
         />
       )}
     </div>
