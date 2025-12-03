@@ -17,7 +17,9 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   const [editText, setEditText] = useState('');
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
+  // Only depend on user.sub and getAccessTokenSilently
   const loadCaptures = useCallback(async () => {
+    console.debug('[CaptureGrid] loadCaptures called');
     if (!isAuthenticated || !user) {
       setError('You must be logged in to view captures');
       setLoading(false);
@@ -36,11 +38,13 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
       const token = await getAccessTokenSilently();
       const allCaptures = await captureService.listCapturesByUser(userId, token, false);
       setCaptures(allCaptures);
+      setLoading(false);
+      console.debug('[CaptureGrid] Loaded captures:', allCaptures);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load captures');
       setLoading(false);
     }
-  }, [isAuthenticated, user, getAccessTokenSilently]);
+  }, [user?.sub, getAccessTokenSilently, isAuthenticated]);
 
   useEffect(() => {
     loadCaptures();
@@ -109,6 +113,7 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   };
 
   if (loading) {
+    console.debug('[CaptureGrid] Rendering: loading branch');
     return (
       <div
         style={{
@@ -126,6 +131,7 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   }
 
   if (error) {
+    console.debug('[CaptureGrid] Rendering: error branch');
     return (
       <div
         style={{
@@ -156,6 +162,7 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
   }
 
   if (captures.length === 0) {
+    console.debug('[CaptureGrid] Rendering: empty branch');
     return (
       <div
         style={{
@@ -172,7 +179,8 @@ export default function CaptureGrid({ theme, refreshTrigger }: CaptureGridProps)
       </div>
     );
   }
-
+  // Log before rendering grid branch
+  console.debug('[CaptureGrid] Rendering: grid branch', captures);
   return (
     <div
       style={{
