@@ -29,6 +29,8 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.3.4",
+    "@opentelemetry/exporter-otlp-http": "^0.26.0",
+    "@opentelemetry/sdk-logs": "^0.208.0",
     "axios": "^1.12.2",
     "oidc-client-ts": "^3.4.1",
     "openapi-typescript-codegen": "^0.29.0",
